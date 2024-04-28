@@ -1,0 +1,261 @@
+<!-- ========== Topbar Start ========== -->
+<div class="navbar-custom topnav-navbar">
+
+    <div class="container-fluid detached-nav">
+
+        <!-- Topbar Logo -->
+        <div class="logo-topbar">
+            <!-- Logo light -->
+            <a href="index.html" class="logo-light">
+                <span class="logo-lg">
+                    <img src="images/eskimo-icon.png" alt="logo">
+                </span>
+                <span class="logo-sm">
+                    <img src="images/eskimo-icon.png" alt="small logo">
+                </span>
+            </a>
+
+            <!-- Logo Dark -->
+            <a href="index.html" class="logo-dark">
+                <span class="logo-lg">
+                    <img src="images/eskimo-icon-black.png" alt="dark logo">
+                </span>
+                <span class="logo-sm">
+                    <img src="images/eskimo-icon-black.png" alt="small logo">
+                </span>
+            </a>
+        </div>
+
+        <!-- Sidebar Menu Toggle Button -->
+        <button class="button-toggle-menu">
+            <span class="mdi mdi-menu"></span>
+        </button>
+
+        <!-- Horizontal Menu Toggle Button -->
+        <button class="navbar-toggle" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+            <div class="lines">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+
+        <ul class="list-unstyled topbar-menu float-end mb-0">
+
+            <li class="dropdown notification-list" id="notification-placeholder">
+            </li>
+
+            <li class="dropdown notification-list d-none d-sm-inline-block">
+                <a class="nav-link" href="docs/eskimo-guide.html"
+                   id="main-show-user-guide"
+                   target="_blank"
+                   title="Show User Guide"
+                   role="button" aria-haspopup="false" aria-expanded="false">
+                    <span class="menu-icon fa fa-file-o"></span>
+                </a>
+            </li>
+
+            <li class="dropdown notification-list d-none d-sm-inline-block">
+                <a class="nav-link "
+                   href="docs/service-dev-guide.html" id="main-show-service-guide"
+                   target="_blank"
+                   title="Show Service Development Guide"
+                   role="button" aria-haspopup="false" aria-expanded="false">
+                    <span class="menu-icon fa fa-file-o"></span>
+                </a>
+            </li>
+            <li class="dropdown notification-list d-none d-sm-inline-block">
+                <a class="nav-link arrow-none" href="#"
+                   id="main-show-about-link"
+                   title="Show Eskimo About Information"
+                   role="button" aria-haspopup="false" aria-expanded="false">
+                    <span class="menu-icon top-menu-small fa fa-question"></span>
+                </a>
+            </li>
+
+            <li class="notification-list d-none d-md-inline-block">
+                <a class="nav-link" href="#" data-toggle="fullscreen">
+                    <span class="ri-fullscreen-line noti-icon"></span>
+                </a>
+            </li>
+
+            <li class="dropdown notification-list">
+                <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown"
+                   href="#" role="button" aria-haspopup="false"
+                   aria-expanded="false">
+                    <span class="account-user-avatar">
+                        <img src="images/user.png" alt="user-image" class="rounded-circle">
+                    </span>
+                    <span>
+                        <span class="account-user-name" id="account-user-name">(User)</span>
+                        <span class="account-position" id="account-position">(Role)</span>
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
+                    <!-- item-->
+                    <div class=" dropdown-header noti-title">
+                        <h6 class="text-overflow m-0">Welcome !</h6>
+                    </div>
+
+                    <!-- item-->
+                    <a id="edit-user-link" href="javascript:void(0);" class="dropdown-item notify-item">
+                        <span class="mdi mdi-account-circle me-1"></span>
+                        <span>My Account</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="javascript:void(0);" id="user-logout" class="dropdown-item notify-item">
+                        <span class="mdi mdi-logout me-1"></span>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </li>
+        </ul>
+
+
+    </div>
+</div>
+<!-- ========== Topbar End ========== -->
+
+
+<!-- ========== Left Sidebar Start ========== -->
+<div class="leftside-menu">
+
+    <!-- Logo Light -->
+    <a href="index.html" class="logo logo-light">
+        <div class="logo-lg">
+            <img src="images/eskimo-icon.png" alt="logo">
+            <span id="eskimoTitle" class="logo-title">Eskimo Console</span>
+            <div class="eskimo-version" id="eskimo-version">
+                (version)
+            </div>
+        </div>
+        <div class="logo-sm">
+            <img src="images/eskimo-icon.png" alt="small logo">
+        </div>
+    </a>
+
+    <!-- Logo Dark -->
+    <a href="index.html" class="logo logo-dark">
+        <div class="logo-lg">
+            <img src="images/eskimo-icon-black.png" alt="dark logo" height="22">
+            <span id="eskimoTitle-dark" class="logo-title">Eskimo Console</span>
+            <div class="eskimo-version" id="eskimo-version-dark">
+                (version)
+            </div>
+        </div>
+        <div class="logo-sm">
+            <img src="images/eskimo-icon-black.png" alt="small logo" height="22">
+        </div>
+    </a>
+
+    <!-- Sidebar Hover Menu Toggle Button -->
+    <button type="button" class="btn button-sm-hover p-0" data-bs-toggle="tooltip" data-bs-placement="right"
+            title="Show Full Sidebar">
+        <span class="ri-checkbox-blank-circle-line align-middle"></span>
+    </button>
+
+    <!-- Sidebar -left -->
+    <div class="h-100" id="leftside-menu-container" data-simplebar>
+        <!-- Leftbar User -->
+        <div class="leftbar-user">
+            <a href="#">
+                <img src="images/user.png" alt="user-image" height="42"
+                     class="rounded-circle shadow-sm">
+                <span class="leftbar-user-name">(User)</span>
+            </a>
+        </div>
+
+        <!--- Sidemenu -->
+        <div id="left-menu-placeholder">
+
+        </div>
+        <!--- End Sidemenu -->
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- ========== Left Sidebar End ========== -->
+
+
+<div class="content-page" id="content-page">
+    <div class="content" id="main-content">
+
+        <!-- eskimoNodeStatus.html -->
+        <div class="container-fluid inner-content" id="inner-content-status" style="visibility: hidden; display: none;"></div>
+
+        <!-- eskimoConsoles.html -->
+        <div class="container-fluid inner-content" id="inner-content-consoles" style="visibility: hidden; display: none;"></div>
+
+        <!-- eskimoOperations.html -->
+        <div class="container-fluid inner-content" id="inner-content-operations" style="visibility: hidden; display: none;"></div>
+
+        <!-- eskimoSetup.html -->
+        <div class="container-fluid inner-content" id="inner-content-setup" style="visibility: hidden; display: none;"></div>
+
+        <!-- eskimoNodesConfig.html -->
+        <div class="container-fluid inner-content" id="inner-content-nodes-config" style="visibility: hidden; display: none;"></div>
+
+        <!-- eskimoServicesSettings.html -->
+        <div class="container-fluid inner-content" id="inner-content-services-settings" style="visibility: hidden; display: none;"></div>
+
+        <!-- eskimoKubernetesServicesConfig.html -->
+        <div class="container-fluid inner-content" id="inner-content-kubernetes-services-config" style="visibility: hidden; display: none;"></div>
+
+        <!-- eskimoFileManagers.html -->
+        <div class="container-fluid inner-content" id="inner-content-file-managers" style="visibility: hidden; display: none;"></div>
+
+        <!-- progress bar -->
+        <div class="inner-content-show" id="inner-content-progress"
+             style="z-index: 10; height: 100%; background: white; opacity: 0.4; display: none; visibility: hidden; ">
+            <div class="inner-content-inner " style="top: 50%;width: 100%; height: 50px;">
+
+                <div class="progress active" style="margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-striped bg-info" role="progressbar" aria-valuenow="100" aria-valuemin="0"
+                         aria-valuemax="100" style="width: 100%">
+                        Operations Executing on Eskimo
+                    </div>
+                </div>
+                <div class="pending-link-operations">
+                    <a id="link-to-operations" href="javascript:eskimoMain.getOperations().showOperations();">Show
+                        Pending Operations</a></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- the various service iframes  -->
+    <!-- ... -->
+
+    <!-- modal dialog for services selection -->
+    <div id="services-selection-modal-wrapper"></div>
+
+    <!-- modal dialog for services selection -->
+    <div id="kubernetes-services-selection-modal-wrapper"></div>
+
+    <!-- modal dialog for operation confirmation -->
+    <div id="operations-command-modal-wrapper"></div>
+
+    <!-- modal dialog for setup confirmation -->
+    <div id="setup-command-modal-wrapper"></div>
+
+    <!-- modal dialog for kubernetes operation confirmation -->
+    <div id="kubernetes-operations-command-modal-wrapper"></div>
+
+    <!-- modal dialog for settings operation confirmation -->
+    <div id="settings-operations-command-modal-wrapper"></div>
+
+    <!-- modal dialog for about box -->
+    <div id="about-modal-wrapper"></div>
+
+    <!-- modal dialog for user edition -->
+    <div id="edit-user-modal-wrapper"></div>
+
+    <!-- modal dialog for message (alert) window -->
+    <div id="alert-modal-wrapper"></div>
+
+</div>
+
+

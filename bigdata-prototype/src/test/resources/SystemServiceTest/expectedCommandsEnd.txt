@@ -1,0 +1,5 @@
+
+sudo chmod 755 /etc/eskimo_services-settings.json
+cat /etc/eskimo_flag_k8s_installed
+./services_setup/base-eskimo/install-kubernetes.sh
+sudo bash -c "echo OK > /etc/eskimo_flag_k8s_installed"

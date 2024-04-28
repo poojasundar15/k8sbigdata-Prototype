@@ -1,0 +1,11 @@
+server.host: "0.0.0.0"
+
+server.name: "Eskimo"
+
+pid.file: /var/run/elasticsearch/kibana/kibana.pid
+
+server.basePath: "/kibana"
+
+elasticsearch.url: "http://elasticsearch.eskimo.svc.cluster.eskimo:9200"
+
+elasticsearch.hosts: ["http://elasticsearch.eskimo.svc.cluster.eskimo:9200"]

@@ -1,0 +1,1956 @@
+{
+
+  "ntp" : {
+    "config": {
+      "imageName" : "ntp",
+      "order": 0,
+      "mandatory": true,
+      "name" : "NTP",
+      "selectionLayout" : { "row" : 1, "col" : 1},
+      "memory": "negligible",
+      "logo" : "images/ntp-logo.png",
+      "icon" : "images/ntp-icon.png"
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "FIRST_NODE",
+        "masterService": "ntp",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_log",
+        "name" : "Show Logs",
+        "command": "cat /var/log/ntp/ntp.log",
+        "icon": "fa-file"
+      }
+    ]
+  },
+
+
+
+  "zookeeper": {
+    "config": {
+      "imageName" : "zookeeper",
+      "order": 1,
+      "unique": true,
+      "name" : "Zoo-keeper",
+      "selectionLayout" : { "row" : 1, "col" : 2},
+      "memory": "small",
+      "logo" : "images/zookeeper-logo.png",
+      "icon" : "images/zookeeper-icon.png"
+    },
+    "additionalEnvironment": [ "SERVICE_NUMBER_1_BASED" ],
+    "editableSettings": [
+      {
+        "filename": "environment",
+        "propertyType": "REGEX",
+        "propertyFormat": "{name}{value}",
+        "commentPrefix": "#",
+        "filesystemService": "zookeeper",
+        "properties": [
+          {
+            "name": "Xms",
+            "comment": "Startup Heap Size for zookeeper\n [ESKIMO_DEFAULT] means memory allocator will decide of zookeeper memory share.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          },
+          {
+            "name": "Xmx",
+            "comment": "Maximum Heap Size for zookeeper\n [ESKIMO_DEFAULT] means memory allocator will decide of zookeeper memory share.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          }
+        ]
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_log",
+        "name" : "Show Logs",
+        "command": "cat /var/log/zookeeper/zookeeper.log",
+        "icon": "fa-file"
+      }
+    ]
+  },
+
+
+
+  "prom-node-exporter" : {
+    "config": {
+      "imageName" : "prom-node-exporter",
+      "order": 2,
+      "mandatory": true,
+      "group" : "Monitoring",
+      "name" : "Node Exporter",
+      "selectionLayout" : { "row" : 3, "col" : 1},
+      "memory": "negligible",
+      "logo" : "images/prometheus-logo.png",
+      "icon" : "images/prometheus-icon.png"
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "ntp",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_nodeexporter_log",
+        "name" : "Show Node Exporter Logs",
+        "command": "cat /var/log/prometheus/node-exporter.log",
+        "icon": "fa-file"
+      }
+    ]
+  },
+
+
+
+  "prometheus" : {
+    "config": {
+      "imageName" : "prometheus",
+      "order": 3,
+      "unique": true,
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "0.1",
+          "ram": "400M"
+        }
+      },
+      "group" : "Monitoring",
+      "name" : "Prome-theus",
+      "memory": "negligible",
+      "logo" : "images/prometheus-logo.png",
+      "icon" : "images/prometheus-icon.png",
+      "user": {
+        "name": "prometheus",
+        "id": 3307
+      }
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "prometheus",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_prometheus_log",
+        "name" : "Show Prometheus Logs",
+        "command": "cat /var/log/prometheus/prometheus.log",
+        "icon": "fa-file"
+      }
+    ]
+  },
+
+
+
+  "grafana" : {
+    "config": {
+      "imageName" : "grafana",
+      "order": 4,
+      "unique": true,
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "0.3",
+          "ram": "400M"
+        }
+      },
+      "group" : "Monitoring",
+      "name" : "Grafana",
+      "memory": "small",
+      "logo" : "images/grafana-logo.png",
+      "icon" : "images/grafana-icon.png",
+      "user": {
+        "name": "grafana",
+        "id": 3304
+      }
+    },
+    "ui": {
+      "proxyTargetPort" : 31300,
+      "waitTime": 5000,
+      "title" : "Grafana Monitoring",
+      "role" : "*",
+      "proxyReplacements" : [
+        {
+          "type" : "PLAIN",
+          "source" : "url\":\"/grafana",
+          "target" : "url\":\"/{CONTEXT_PATH}grafana"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "Url\":\"/grafana",
+          "target" : "Url\":\"/{CONTEXT_PATH}grafana"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "{PREFIX_PATH}/{PREFIX_PATH}",
+          "target" : "{PREFIX_PATH}"
+        },
+        {
+          "comment": "for whatever reason, I need to replace this without grafana. The thing is that I am not the one putting it ?!?",
+          "type" : "PLAIN",
+          "source" : "{CONTEXT_PATH}api/v1",
+          "target" : "api/v1"
+        },
+        {
+          "comment": "for whatever reason, I need to replace this without grafana. The thing is that I am not the one putting it ?!?",
+          "type" : "PLAIN",
+          "source" : "{PREFIX_PATH}/api/v1",
+          "target" : "api/v1"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "appUrl: `${window.location.origin}${config.appSubUrl}`",
+          "target" : "appUrl: `${window.location.origin}${config.appSubUrl}`.replace(\"{APP_ROOT_NO_CONTEXT}/grafana\", \"{APP_ROOT}/ws/grafana\").replace(\"{APP_ROOT}/grafana\", \"{APP_ROOT}/ws/grafana\")"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "appUrl: `${window.location.origin}${s.v.appSubUrl}`",
+          "target" : "appUrl: `${window.location.origin}${s.v.appSubUrl}`.replace(\"{APP_ROOT_NO_CONTEXT}/grafana\", \"{APP_ROOT}/ws/grafana\").replace(\"{APP_ROOT}/grafana\", \"{APP_ROOT}/ws/grafana\")"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "appUrl:`${window.location.origin}${s.v.appSubUrl}`",
+          "target" : "appUrl:`${window.location.origin}${s.v.appSubUrl}`.replace(\"{APP_ROOT_NO_CONTEXT}/grafana\", \"{APP_ROOT}/ws/grafana\").replace(\"{APP_ROOT}/grafana\", \"{APP_ROOT}/ws/grafana\")"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "prometheus/api",
+          "target" : "prometheus/grafana/api"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "n=g.u.getUrlForPartial(e,{forceLogin:\"true\"})",
+          "target" : "n=g.u.getUrlForPartial(e,{forceLogin:\"true\"}); if (!n.startsWith(\"/{CONTEXT_PATH}grafana\")) { n = \"{CONTEXT_PATH}grafana\" + (n.startsWith(\"/\") ? n : (\"/\" + n)) }"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "const n=g.u.getUrlForPartial(t,{forceLogin:\"true\"});",
+          "target" : "let n=g.u.getUrlForPartial(t,{forceLogin:\"true\"}); if (!n.startsWith(\"/{CONTEXT_PATH}grafana\")) { n = \"{CONTEXT_PATH}grafana\" + (n.startsWith(\"/\") ? n : (\"/\" + n)) }"
+        }
+      ]
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "prometheus",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      }
+    ],
+    "editableSettings": [
+      {
+        "filename": "defaults.ini",
+        "filesystemService": "grafana",
+        "propertyType": "variable",
+        "propertyFormat": "{name} = {value}",
+        "commentPrefix": "#",
+        "properties": [
+          {
+            "name": "admin_user",
+            "comment": "Login Name of the Grafana admin user within eskimo\n<strong>CAN ONLY BE CHANGED BEFORE FIRST START OF GRAFANA</strong>",
+            "defaultValue": "eskimo"
+          },
+          {
+            "name": "admin_password",
+            "comment": "Login Password of the Grafana admin user within eskimo\n<strong>CAN ONLY BE CHANGED BEFORE FIRST START OF GRAFANA</strong>",
+            "defaultValue": "eskimo"
+          }
+        ]
+      }
+    ],
+    "additionalEnvironment": [ "CONTEXT_PATH" ]
+  },
+
+
+
+  "gluster" : {
+    "config": {
+      "imageName" : "gluster",
+      "order": 5,
+      "name" : "Gluster / EGMI",
+      "selectionLayout" : { "row" : 2, "col" : 1},
+      "memory": "negligible",
+      "logo" : "images/gluster-logo.png",
+      "icon" : "images/gluster-icon.png"
+    },
+    "ui": {
+      "urlTemplate": "./gluster/{NODE_ADDRESS}/egmi/index.html",
+      "proxyTargetPort": 28901,
+      "waitTime": 10000,
+      "role" : "ADMIN",
+      "title": "Gluster Dashboard"
+    },
+    "masterDetection": {
+      "strategy" : "LOG_FILE",
+      "logFile" : "/var/log/gluster/egmi/egmi.log",
+      "grep": "I am the new leader",
+      "timeStampExtractRexp" : "([0-9\\-]+ [0-9.:,]+).*",
+      "timeStampFormat" : "yyyy-MM-dd HH:mm:ss,SSS"
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "FIRST_NODE",
+        "masterService": "zookeeper",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      },
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "ntp",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "additionalEnvironment": [
+      "ALL_NODES_LIST_gluster"
+    ],
+    "editableSettings": [
+      {
+        "filename": "egmi.properties",
+        "filesystemService": "egmi",
+        "propertyType": "variable",
+        "propertyFormat": "{name}={value}",
+        "commentPrefix": "#",
+        "properties": [
+          {
+            "name": "target.volumes",
+            "comment": "The volumes to be automagically managed by EGMI.",
+            "defaultValue": "",
+            "value": "spark_eventlog,spark_data,flink_data,kafka_data,flink_completed_jobs,logstash_data,kubernetes_registry,kubernetes_shared"
+          },
+          {
+            "name": "target.volumes.performance.off",
+            "comment": "Volumes for which the performance settings needs to be turned off.",
+            "defaultValue": "",
+            "value": "kafka_data"
+          },
+          {
+            "name": "config.performance.off",
+            "comment": "Performance settings to turn off for volumes defined in 'target.volumes.performance.off'",
+            "defaultValue": "",
+            "value": "performance.quick-read,performance.io-cache,performance.write-behind,performance.stat-prefetch,performance.read-ahead,performance.readdir-ahead,performance.open-behind"
+          },
+          {
+            "name": "system.statusUpdatePeriodSeconds",
+            "comment": "The orchestration loop delay in seconds. EGMI runs its checks and updates its status every X seconds.",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue": "30",
+            "value": "20"
+          },
+          {
+            "name": "target.numberOfBricks",
+            "comment": "Define the target minimum number of bricks we want for every volume. It can be a fixed number (like 1, 2, 5, etc.) or a strategy among [ALL_NODES, LOG_DISPATCH].",
+            "defaultValue": "LOG_DISPATCH",
+            "validationRegex": "^([0-9\\.]+)$|^(LOG_DISPATCH)$|^(ALL_NODES)$",
+            "value": ""
+          },
+          {
+            "name": "target.defaultNumberReplica",
+            "comment": "The ideal number of replicas to try to respect.",
+            "defaultValue": "3",
+            "validationRegex": "^[0-9\\.]+$|",
+            "value": ""
+          },
+          {
+            "name": "zookeeper.urls",
+            "comment": "The URL:PORT used to connect to zookeeper (or set of URL:PORTs, coma separated). Use 'ZOOKEEPER_URL:2181' on Eskimo to have it injected automatically by eskimo topology system.",
+            "defaultValue": "",
+            "value": "ZOOKEEPER_URL:2181"
+          },
+          {
+            "name": "target.predefined-ip-addresses",
+            "comment": "Preconfigured set of IP addresses where gluster is to be managed (coma separated).\nIf these are set here, they're used as a fixed pre-defined set of data nodes to manager.\n If none is defined here, zookeeper is used to track data nodes",
+            "defaultValue": "",
+            "value": ""
+          },
+          {
+            "name": "master",
+              "comment": "Force these instances of EGMI being master not master (if EGMI master is running elsewhere), regardless of what happens in zookeeper. Use master=false",
+            "defaultValue": "",
+            "validationRegex": "^(true)$|^(false)$",
+            "value": ""
+          }
+        ]
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_log",
+        "name" : "Show GlusterFS Logs",
+        "command": "sudo cat /var/log/gluster/glusterfs.log",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "show_egmi_log",
+        "name" : "Show EGMI Backend Logs",
+        "command": "sudo cat /var/log/gluster/egmi/egmi.log",
+        "icon": "fa-file"
+      }
+    ]
+  },
+
+
+
+  "etcd": {
+    "config": {
+      "order": 6,
+      "group" : "Kubernetes",
+      "name" : "Etcd",
+      "unique": true,
+      "selectionLayout" : { "row" : 2, "col" : 2},
+      "memory": "negligible",
+      "logo" : "images/kube-master-logo.png",
+      "icon" : "images/kube-master-icon.png",
+      "user": {
+        "name": "kubernetes",
+        "id": 3306
+      }
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "ntp",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "additionalEnvironment": [
+      "ALL_NODES_LIST_etcd",
+      "SERVICE_NUMBER_1_BASED"
+    ]
+  },
+
+
+
+  "kube-master": {
+    "config": {
+      "imageName" : "kube-master",
+      "order": 7,
+      "kubeMaster" : true,
+      "unique": true,
+      "group" : "Kubernetes",
+      "name" : "Master",
+      "selectionLayout" : { "row" : 3, "col" : 2},
+      "memory": "negligible",
+      "logo" : "images/kube-master-logo.png",
+      "icon" : "images/kube-master-icon.png",
+      "user": {
+        "name": "kubernetes",
+        "id": 3306
+      }
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": false,
+        "restart": true
+      },
+      {
+        "masterElectionStrategy": "FIRST_NODE",
+        "masterService": "kube-master",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      },
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "etcd",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      },
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "ntp",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ]
+  },
+
+
+
+  "kube-slave": {
+    "config": {
+      "order": 8,
+      "kubeSlave" : true,
+      "group" : "Kubernetes",
+      "name" : "Slave",
+      "selectionLayout" : { "row" : 4, "col" : 1},
+      "memory": "negligible",
+      "logo" : "images/kube-slave-logo.png",
+      "icon" : "images/kube-slave-icon.png",
+      "user": {
+        "name": "kubernetes",
+        "id": 3306
+      }
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "FIRST_NODE",
+        "masterService": "kube-master",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true,
+        "hooks": {
+          "preUninstallHook": "/usr/local/bin/eskimo-kubectl delete_node NULL {service.node.address}"
+        }
+      },
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      },
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "ntp",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      },
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "prom-node-exporter",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "additionalEnvironment": [
+      "ALL_NODES_LIST_kube-slave",
+      "SERVICE_NUMBER_1_BASED"
+    ]
+  },
+
+
+
+  "kubernetes-dashboard" : {
+    "config": {
+      "imageName" : "kubernetes-dashboard",
+      "order": 9,
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "0.3",
+          "ram": "500M"
+        }
+      },
+      "unique": true,
+      "group" : "Kubernetes",
+      "name" : "Dash-board",
+      "memory": "small",
+      "logo" : "images/kube-master-logo.png",
+      "icon" : "images/kube-master-icon.png",
+      "user": {
+        "name": "kubernetes",
+        "id": 3306
+      }
+    },
+    "webCommands": [
+      {
+        "id" : "kubeDashboardLoginToken",
+        "service": "kube-master",
+        "command": "/usr/local/bin/kubectl -n eskimo create token eskimo --duration 2h",
+        "role" : "ADMIN"
+      }
+    ],
+    "ui": {
+      "kubeProxy": true,
+      "__comment_urlTemplate": "Going through Kubectl proxy.",
+      "urlTemplate": "kubernetes-dashboard/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/workloads?namespace=_all",
+      "__comment_proxyTargetPort": "Kubectl proxy target port",
+      "proxyTargetPort" : 8001,
+      "waitTime": 5000,
+      "role" : "ADMIN",
+      "title" : "Kube Dashboard",
+      "proxyReplacements" : [
+        {
+          "type" : "PLAIN",
+          "source" : "h=\"https\"===h.slice(0,5)?\"wss\"+h.slice(5):\"ws\"+h.slice(4),this.url=h,",
+          "target" : "h=\"https\"===h.slice(0,5)?\"wss\"+h.slice(5):\"ws\"+h.slice(4),this.url=h.replace(\"kubernetes-dashboard/api\",\"ws/kubernetes-dashboard/api\"),"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "\"WebSocket connection broken\"),d._cleanup()}}",
+          "target" : "\"WebSocket connection broken\"),d._cleanup()};let eskThat=this;eskThat.ws.onopen = function (event) {eskThat.ws.send(\"HELLO_ESKIMO\");};}"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "kubernetes-dashboard//",
+          "target" : "kubernetes-dashboard/"
+        },
+        {
+          "___comment": "ALl of the following are to get rid of the limit of Kubernetes Dashboard to prevent HTTP access from non-localhost",
+          "type" : "PLAIN",
+          "source" : "isCurrentDomainSecure_(){return[\"localhost\",\"127.0.0.1\"].indexOf(location.hostname)>-1}",
+          "target" : "isCurrentDomainSecure_(){return true}"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "isCurrentProtocolSecure_(){return location.protocol.includes(\"https\")}",
+          "target" : "isCurrentProtocolSecure_(){return true}"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "isAuthenticationEnabled(x){return x.httpsMode}",
+          "target" : "isAuthenticationEnabled(x){return true}"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "isAuthenticationEnabled(S){return S.httpsMode}",
+          "target" : "isAuthenticationEnabled(S){return true}"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "isAuthEnabled(){return!!this.loginStatus&&this.loginStatus.httpsMode}",
+          "target" : "isAuthEnabled(){return true}"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "isLoginPageEnabled(){return\"true\"!==this.cookies_.get(this.config_.skipLoginPageCookieName)}",
+          "target" : "isLoginPageEnabled(){return true}"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "isLoginEnabled(){return this.isCurrentDomainSecure_()||this.isCurrentProtocolSecure_()}",
+          "target" : "isLoginEnabled(){return true}"
+        },
+        {
+          "___comment": "required for login, enable cookies._set to accept cookie despite non https and non localhost (previous version of k dashboard)",
+          "type" : "PLAIN",
+          "source" : ",S.secure&&(v+=\"secure;\"),S.sameSite||(S.sameSite=\"Lax\"),v+=\"sameSite=\"+S.sameSite+\";\"",
+          "target" : ""
+        },
+        {
+          "___comment": "required for login, enable cookies._set to accept cookie despite non https and non localhost (current version of k dashboard)",
+          "type" : "PLAIN",
+          "source" : ",x.secure&&(g+=\"secure;\"),x.sameSite||(x.sameSite=\"Lax\"),g+=\"sameSite=\"+x.sameSite+\";\"",
+          "target" : ""
+        }
+
+      ],
+      "pageScripters" : [
+        {
+          "resourceUrl" : "api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/",
+          "script": "function triggerLogin () {\n    const tokenInput = document.getElementById(\"token\");\n    tokenInput.value = '';\n    tokenInput.setAttribute('readonly','readonly');                \n    const loginButton = document.getElementsByTagName(\"button\")[0];\n    if (loginButton && loginButton != null) {\n        loginButton.click();  \n    } else {\n        setTimeout (triggerLogin, 100);\n    }\n}\n\nfunction eskimoLoginChecker() {\n        \n    let contextPath = \"{CONTEXT_PATH}\";\n        \n    if (document.getElementsByTagName (\"kd-login\").length >= 1) {\n\n        const matRadioInput = document.getElementsByClassName(\"mat-radio-input\")[0]\n        if (matRadioInput && matRadioInput != null) {\n        \n            matRadioInput.click();\n        \n            const fetchToken = async () => {\n                const response = await fetch((contextPath != \"\" ? \"/\" + contextPath : \"/\") + \"eskimo-command/kubeDashboardLoginToken\");\n                const result = await response.json(); //extract JSON from the http response\n\n                const error = result.error;\n                if (error && error != \"\") {\n                    console.log (error);\n                } else {\n\n                    const loginToken = result.value;\n\n                    const tokenInput = document.getElementById(\"token\");\n                    if (tokenInput && tokenInput != null) {\n                        tokenInput.value = loginToken;\n                        \n                        if (\"createEvent\" in document) {\n                            var evt = document.createEvent(\"HTMLEvents\");\n                            evt.initEvent(\"change\", false, true);\n                            tokenInput.dispatchEvent(evt);\n                        } else {\n                            tokenInput.fireEvent(\"onchange\");\n                        }                                       \n                \n                        setTimeout (window.triggerLogin, 50);\n                    }\n                }\n            }    \n            \n            fetchToken();\n        }\n    }\n    \n    setTimeout (function() { eskimoLoginChecker();}, 2000);\n}\n\neskimoLoginChecker();"
+        }
+      ]
+    }
+  },
+
+
+
+  "kube-shell" : {
+    "config": {
+      "imageName" : "kube-shell",
+      "order": 10,
+      "group" : "Kubernetes",
+      "name" : "Shell",
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "0.1",
+          "ram": "100M"
+        }
+      },
+      "registryOnly": true,
+      "memory": "small",
+      "logo" : "images/eskimo-logo.png",
+      "icon" : "images/eskimo-icon.png"
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "FIRST_NODE",
+        "masterService": "kube-master",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ]
+  },
+
+
+
+  "kafka" : {
+    "config": {
+      "imageName" : "kafka",
+      "order": 11,
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "1",
+          "ram": "1G"
+        }
+      },
+      "group" : "Kafka",
+      "name" : "Broker",
+      "memory": "medium",
+      "logo" : "images/kafka-logo.png",
+      "icon" : "images/kafka-icon.png",
+      "user": {
+        "name": "kafka",
+        "id": 3303
+      }
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "FIRST_NODE",
+        "masterService": "zookeeper",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      },
+      {
+        "masterElectionStrategy": "ALL_NODES",
+        "masterService": "kube-slave",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      },
+      {
+        "__comment": "this is to force restart of container in case gluster evolves",
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      }
+    ],
+    "editableSettings": [
+      {
+        "filename": "eskimo-memory.opts",
+        "propertyType": "REGEX",
+        "propertyFormat": "{name}{value}",
+        "commentPrefix": "#",
+        "filesystemService": "kafka",
+        "properties": [
+          {
+            "name": "Xms",
+            "comment": "Startup Heap Size for Kafka java process\n [ESKIMO_DEFAULT] means memory allocator will decide of Kafka memory share.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          },
+          {
+            "name": "Xmx",
+            "comment": "Maximum Heap Size for Kafka java process\n [ESKIMO_DEFAULT] means memory allocator will decide of Kafka memory share.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          }
+        ]
+      },
+      {
+        "filename": "server.properties",
+        "filesystemService": "kafka",
+        "propertyType": "variable",
+        "propertyFormat": "{name}={value}",
+        "commentPrefix": "#",
+        "properties": [
+          {
+            "name": "num.network.threads",
+            "comment": "The number of threads that the server uses for receiving requests from the network and sending responses to the network",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue": "3"
+          },
+          {
+            "name": "num.io.threads",
+            "comment": "The number of threads that the server uses for processing requests, which may include disk I/O",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue": "8"
+          },
+          {
+            "name": "socket.send.buffer.bytes",
+            "comment": "The send buffer (SO_SNDBUF) used by the socket server",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue": "102400"
+          },
+          {
+            "name": "socket.receive.buffer.bytes",
+            "comment": "The receive buffer (SO_RCVBUF) used by the socket server",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue": "102400"
+          },
+          {
+            "name": "socket.request.max.bytes",
+            "comment": "The maximum size of a request that the socket server will accept (protection against OOM)",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue": "104857600"
+          },
+          {
+            "name": "num.partitions",
+            "comment": "The default number of log partitions per topic. More partitions allow greater parallelism for consumption, but this will also result in more files across the brokers.",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue": "1"
+          },
+          {
+            "name": "log.retention.hours",
+            "comment": "The minimum age of a log file to be eligible for deletion due to age",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue": "168"
+          }
+        ]
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_server_log",
+        "name" : "Show Server Logs",
+        "command": "cat /var/log/kafka/server.log",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "show_controller_log",
+        "name" : "Show Controller Logs",
+        "command": "cat /var/log/kafka/controller.log",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "show_state_change_log",
+        "name" : "Show State Change Logs",
+        "command": "cat /var/log/kafka/state-change.log",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "mount_kafka_data",
+        "name" : "Mount kafka_data on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh kafka_data /var/lib/kafka/data kafka",
+        "icon": "fa-folder"
+      }
+    ]
+  },
+
+
+
+  "kafka-cli" : {
+    "config": {
+      "order": 12,
+      "group": "Kafka",
+      "name": "Client",
+      "selectionLayout": {
+        "row": 2,
+        "col": 3
+      },
+      "memory": "negligible",
+      "logo" : "images/kafka-logo.png",
+      "icon" : "images/kafka-icon.png",
+      "user": {
+        "name": "kafka",
+        "id": 3303
+      }
+    },
+    "dependencies" : [
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "mount_kafka_data_kafkacli",
+        "name" : "Mount kafka_data on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh kafka_data /var/lib/kafka/data kafka",
+        "icon": "fa-folder"
+      }
+    ]
+  },
+
+
+
+  "kafka-manager": {
+    "config": {
+      "imageName" : "kafka-manager",
+      "order": 13,
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "0.3",
+          "ram": "400M"
+        }
+      },
+      "unique": true,
+      "group" : "Kafka",
+      "name" : "Manager",
+      "memory": "small",
+      "logo" : "images/kafka-manager-logo.png",
+      "icon" : "images/kafka-manager-icon.png",
+      "user": {
+        "name": "kafka",
+        "id": 3303
+      }
+    },
+    "ui": {
+      "kubeProxy": true,
+      "__comment_urlTemplate": "Going through Kubectl proxy.",
+      "urlTemplate": "kafka-manager/api/v1/namespaces/eskimo/services/kafka-manager:31220/proxy/",
+      "__comment_proxyTargetPort": "Kubectl proxy target port",
+      "proxyTargetPort" : 8001,
+      "waitTime": 6000,
+      "role" : "ADMIN",
+      "title" : "Kafka manager",
+      "proxyReplacements" : [
+        {
+          "type" : "PLAIN",
+          "source" : "{PREFIX_PATH}/{PREFIX_PATH}",
+          "target" : "{PREFIX_PATH}"
+        }
+      ]
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "FIRST_NODE",
+        "masterService": "zookeeper",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      },
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "kafka",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_log",
+        "name" : "Show Logs",
+        "command": "cat /var/log/kafka/kafka-manager/application.log",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "mount_kafka_data_kafkamgr",
+        "name" : "Mount kafka_data on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh kafka_data /var/lib/kafka/data kafka",
+        "icon": "fa-folder"
+      }
+    ]
+  },
+
+
+
+  "spark-console" : {
+    "config": {
+      "imageName" : "spark",
+      "order": 14,
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "0.3",
+          "ram": "400M"
+        }
+      },
+      "unique": true,
+      "group" : "Spark",
+      "name" : "Console",
+      "memory": "small",
+      "logo" : "images/spark-console-logo.png",
+      "icon" : "images/spark-console-icon.png",
+      "user": {
+        "name": "spark",
+        "id": 3302
+      }
+    },
+    "ui": {
+      "proxyTargetPort" : 31811,
+      "waitTime": 5000,
+      "role" : "*",
+      "title" : "Spark Console",
+      "applyStandardProxyReplacements": false,
+      "urlRewriting" : [
+        {
+          "startUrl" : "{FULL_SERVER_ROOT}/history/",
+          "replacement" : "{FULL_SERVER_ROOT}/spark-console/history/"
+        },
+        {
+          "startUrl" : "{FULL_SERVER_ROOT_NO_CONTEXT}/history/",
+          "replacement" : "{FULL_SERVER_ROOT}/spark-console/history/"
+        }
+      ]
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      },
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "spark-runtime",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_log",
+        "name" : "Show Logs",
+        "command": "sudo cat /var/log/spark/`ls -t /var/log/spark/ | grep HistoryServer | head -n 1`",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "mount_spark_eventlog_sparkhisto",
+        "name" : "Mount spark_eventlog on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh spark_eventlog /var/lib/spark/eventlog spark",
+        "icon": "fa-folder"
+      },
+      {
+        "id" : "mount_spark_data_sparkhisto",
+        "name" : "Mount spark_data on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh spark_data /var/lib/spark/data spark",
+        "icon": "fa-folder"
+      }
+    ]
+  },
+
+
+
+  "spark-runtime" : {
+    "config": {
+      "imageName" : "spark",
+      "order": 15,
+      "group" : "Spark",
+      "name" : "Runtime",
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "1",
+          "ram": "800M"
+        }
+      },
+      "registryOnly": true,
+      "memory": "large",
+      "logo" : "images/spark-runtime-logo.png",
+      "icon" : "images/spark-runtime-icon.png",
+      "user": {
+        "name": "spark",
+        "id": 3302
+      }
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      }
+    ],
+    "editableSettings": [
+      {
+        "filename": "spark-defaults.conf",
+        "propertyType": "variable",
+        "propertyFormat": "{name}={value}",
+        "commentPrefix": "#",
+        "filesystemService": "spark",
+        "properties" : [
+          {
+            "name" :  "spark.driver.memory",
+            "comment": "Limiting the driver (client) memory",
+            "validationRegex": "^[0-9\\.]+[kmgt]?$",
+            "defaultValue" : "800m"
+          },
+          {
+            "name" :  "spark.rpc.numRetries",
+            "comment": "Number of times to retry before an RPC task gives up. An RPC task will run at most times of this number.",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue" : "5"
+          },
+          {
+            "name" :  "spark.rpc.retry.wait",
+            "comment": "Duration for an RPC ask operation to wait before retrying.",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue" : "5s"
+          },
+          {
+            "name" :  "spark.scheduler.mode",
+            "comment": "The scheduling mode between jobs submitted to the same SparkContext. \nCan be FIFO or FAIR. FAIR Seem not to work well with Kubernetes",
+            "validationRegex": "^(FAIR)$|^(FIFO)$",
+            "defaultValue" : "FAIR"
+          },
+          {
+            "name" :  "spark.locality.wait",
+            "comment": "How long to wait to launch a data-local task before giving up and launching it on a less-local node.",
+            "validationRegex": "^[0-9\\.]+s$",
+            "defaultValue" : "20s"
+          },
+          {
+            "name" :  "spark.dynamicAllocation.executorIdleTimeout",
+            "comment": "If dynamic allocation is enabled and an executor has been idle for more than this duration, the executor will be removed. \n (Caution here : small values cause issues. I have executors killed with 10s for instance)",
+            "validationRegex": "^[0-9\\.]+s$",
+            "defaultValue" : "200s"
+          },
+          {
+            "name" :  "spark.dynamicAllocation.cachedExecutorIdleTimeout",
+            "comment": "If dynamic allocation is enabled and an executor which has cached data blocks has been idle for more than this duration, the executor will be removed - should be consistent with spark.dynamicAllocation.shuffleTracking.timeout. \n (Caution here : small values cause issues. I have executors killed with 10s for instance)",
+            "validationRegex": "^[0-9\\.]+s$",
+            "defaultValue" : "300s"
+          },
+          {
+            "name" :  "spark.dynamicAllocation.shuffleTracking.timeout",
+            "comment": "When shuffle tracking is enabled, controls the timeout for executors that are holding shuffle data - should be consistent with spark.dynamicAllocation.cachedExecutorIdleTimeout.",
+            "validationRegex": "^[0-9\\.]+s$",
+            "defaultValue" : "300s"
+          },
+          {
+            "name" :  "spark.dynamicAllocation.schedulerBacklogTimeout",
+            "comment": "\tIf dynamic allocation is enabled and there have been pending tasks backlogged for more than this duration, new executors will be requested.",
+            "validationRegex": "^[0-9\\.]+s$",
+            "defaultValue" : "5s"
+          },
+          {
+            "name" :  "spark.executor.memory",
+            "comment": "Defining default Spark executor memory allowed by Eskimo Memory Management (found in topology). \nUSE [ESKIMO_DEFAULT] to leave untouched or e.g. 800m, 1.2g, etc.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue" : "[ESKIMO_DEFAULT]"
+          }
+        ]
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "mount_spark_eventlog",
+        "name" : "Mount spark_eventlog on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh spark_eventlog /var/lib/spark/eventlog spark",
+        "icon": "fa-folder"
+      },
+      {
+        "id" : "mount_spark_data",
+        "name" : "Mount spark_data on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh spark_data /var/lib/spark/data spark",
+        "icon": "fa-folder"
+      }
+    ]
+  },
+
+
+
+  "spark-cli" : {
+    "config": {
+      "order": 16,
+      "group" : "Spark",
+      "name": "Client",
+      "selectionLayout": {
+        "row": 3,
+        "col": 3
+      },
+      "memory": "negligible",
+      "logo" : "images/spark-runtime-logo.png",
+      "icon" : "images/spark-runtime-icon.png",
+      "user": {
+        "name": "spark",
+        "id": 3302
+      }
+    },
+    "dependencies" : [
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "mount_spark_eventlog_sparkcli",
+        "name" : "Mount spark_eventlog on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh spark_eventlog /var/lib/spark/eventlog spark",
+        "icon": "fa-folder"
+      },
+      {
+        "id" : "mount_spark_data_sparkcli",
+        "name" : "Mount spark_data on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh spark_data /var/lib/spark/data spark",
+        "icon": "fa-folder"
+      }
+    ]
+  },
+
+
+
+  "flink-runtime" : {
+    "config": {
+      "imageName" : "flink",
+      "order": 17,
+      "group" : "Flink",
+      "name" : "Runtime",
+      "unique": true,
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "1",
+          "ram": "1G"
+        }
+      },
+      "memory": "large",
+      "logo" : "images/flink-runtime-logo.png",
+      "icon" : "images/flink-runtime-icon.png",
+      "user": {
+        "name": "flink",
+        "id": 3305
+      }
+    },
+    "ui": {
+      "kubeProxy": true,
+      "__comment_urlTemplate": "Going through Kubectl proxy.",
+      "urlTemplate": "flink-runtime/api/v1/namespaces/eskimo/services/flink-runtime-rest:8081/proxy/#/overview",
+      "__comment_proxyTargetPort": "Kubectl proxy target port",
+      "proxyTargetPort" : 8001,
+      "waitTime": 5000,
+      "role" : "*",
+      "title" : "Flink Dashboard"
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "FIRST_NODE",
+        "masterService": "zookeeper",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      },
+      {
+        "__comment": "this is to force restart of container in case gluster evolves",
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      }
+    ],
+    "editableSettings": [
+      {
+        "filename": "flink-conf.yaml",
+        "propertyType": "variable",
+        "propertyFormat": "{name}: {value}",
+        "commentPrefix": "#",
+        "filesystemService": "flink",
+        "properties": [
+          {
+            "name": "jobmanager.memory.process.size",
+            "comment": "The total process memory size for the JobManager. Use [ESKIMO_DEFAULT] to use Eskimo computed memory from memory allocation policy.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          },
+          {
+            "name": "taskmanager.memory.process.size:",
+            "comment": "The total process memory size for the TaskManager. Use [ESKIMO_DEFAULT] to use Eskimo computed memory from memory allocation policy.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          },
+          {
+            "name": "parallelism.default",
+            "comment": "Default parallelism for jobs.",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue": "1"
+          },
+          {
+            "name": "taskmanager.numberOfTaskSlots",
+            "comment": "The number of parallel operator or user function instances that a single TaskManager can run. ",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue": "1"
+          },
+          {
+            "name": "taskmanager.slot.timeout",
+            "comment": "Timeout used for identifying inactive slots. The TaskManager will free the slot if it does not become active within the given amount of time.",
+            "validationRegex": "^[0-9\\.]+s$",
+            "defaultValue": "20s"
+          },
+          {
+            "name": "resourcemanager.taskmanager-timeout",
+            "comment": "The timeout for an idle task manager to be released, expressed in ms.",
+            "validationRegex": "^[0-9\\.]+$",
+            "defaultValue": "60000"
+          }
+        ]
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_log",
+        "name" : "Show Logs",
+        "command": "sudo cat /var/log/flink/`ls -t /var/log/flink/ | grep flink- | head -n 1`",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "mount_flink_data",
+        "name" : "Mount flink_data on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh flink_data /var/lib/flink/data flink",
+        "icon": "fa-folder"
+      },
+      {
+        "id" : "mount_flink_completed_jobs",
+        "name" : "Mount flink_completed_jobs on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh flink_completed_jobs /var/lib/flink/completed_jobs flink",
+        "icon": "fa-folder"
+      }
+    ]
+  },
+
+
+
+  "flink-cli" : {
+    "config": {
+      "order": 18,
+      "group" : "Flink",
+      "name": "Client",
+      "selectionLayout": {
+        "row": 4,
+        "col": 3
+      },
+      "memory": "negligible",
+      "logo" : "images/flink-logo.png",
+      "icon" : "images/flink-icon.png",
+      "user": {
+        "name": "flink",
+        "id": 3305
+      }
+    },
+    "dependencies" : [
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "mount_flink_data_flinkcli",
+        "name" : "Mount flink_data on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh flink_data /var/lib/flink/data flink",
+        "icon": "fa-folder"
+      },
+      {
+        "id" : "mount_flink_completed_jobs_flinkcli",
+        "name" : "Mount flink_completed_jobs on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh flink_completed_jobs /var/lib/flink/completed_jobs flink",
+        "icon": "fa-folder"
+      }
+    ]
+  },
+
+
+
+  "logstash" : {
+    "config": {
+      "imageName" : "logstash",
+      "order": 19,
+      "kubernetes": true,
+      "group" : "Elastic Stack",
+      "name" : "Log-stash",
+      "memory": "small",
+      "logo" : "images/logstash-logo.png",
+      "icon" : "images/logstash-icon.png",
+      "user": {
+        "name" : "elasticsearch",
+        "id": 3301
+      }
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      },
+      {
+        "masterElectionStrategy": "ALL_NODES",
+        "masterService": "kube-slave",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      }
+    ],
+    "editableSettings": [
+      {
+        "filename": "jvm.options",
+        "propertyType": "REGEX",
+        "propertyFormat": "{name}{value}",
+        "commentPrefix": "#",
+        "filesystemService": "logstash",
+        "properties": [
+          {
+            "name": "Xms",
+            "comment": "Startup Heap Size for logstash process\n [ESKIMO_DEFAULT] means memory allocator will decide of logstash memory share.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          },
+          {
+            "name": "Xmx",
+            "comment": "Maximum Heap Size for logstash process\n [ESKIMO_DEFAULT] means memory allocator will decide of logstash memory share.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          }
+        ]
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_remote_log",
+        "name" : "Show Remote Server Logs",
+        "command": "cat /var/log/elasticsearch/logstash/logstash_remote.log",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "mount_logstash_data",
+        "name" : "Mount logstash_data on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh logstash_data /var/lib/elasticsearch/logstash/data elasticsearch",
+        "icon": "fa-folder"
+      }
+    ]
+  },
+
+
+
+  "logstash-cli" : {
+    "config": {
+      "order": 20,
+      "group": "Elastic Stack",
+      "name": "LS Client",
+      "selectionLayout": {
+        "row": 1,
+        "col": 3
+      },
+      "memory": "negligible",
+      "logo": "images/logstash-logo.png",
+      "icon": "images/logstash-icon.png",
+      "user": {
+        "name" : "elasticsearch",
+        "id": 3301
+      }
+    },
+    "dependencies" : [
+      {
+        "masterElectionStrategy": "SAME_NODE",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "mount_logstash_data_logstashcli",
+        "name" : "Mount logstash_data on Host",
+        "command": "sudo /usr/local/sbin/gluster-mount.sh logstash_data /var/lib/elasticsearch/logstash/data elasticsearch",
+        "icon": "fa-folder"
+      }
+    ]
+  },
+
+
+
+  "cerebro" : {
+    "config": {
+      "imageName" : "cerebro",
+      "order": 21,
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "0.3",
+          "ram": "400M"
+        }
+      },
+      "unique": true,
+      "group" : "Elastic Stack",
+      "name" : "Cerebro",
+      "memory": "small",
+      "logo" : "images/cerebro-logo.png",
+      "icon" : "images/cerebro-icon.png",
+      "user": {
+        "name" : "elasticsearch",
+        "id": 3301
+      }
+    },
+    "ui": {
+      "kubeProxy": true,
+      "__comment_urlTemplate": "Going through Kubectl proxy.",
+      "urlTemplate": "cerebro/api/v1/namespaces/eskimo/services/cerebro:31900/proxy/#!/overview?host=Eskimo",
+      "__comment_proxyTargetPort": "Kubectl proxy target port",
+      "proxyTargetPort" : 8001,
+      "waitTime": 5000,
+      "role" : "*",
+      "title" : "Cerebro"
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "elasticsearch",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "editableSettings": [
+      {
+        "filename": "JVM_OPTS.sh",
+        "propertyType": "REGEX",
+        "propertyFormat": "{name}{value}",
+        "commentPrefix": "#",
+        "filesystemService": "cerebro",
+        "properties": [
+          {
+            "name": "Xmx",
+            "comment": "Maximum Heap Size for Cerebro java process\n[ESKIMO_DEFAULT] means memory allocator will decide of Cerebro memory share.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          }
+        ]
+      }
+    ]
+  },
+
+
+
+  "elasticsearch": {
+    "config": {
+      "imageName" : "elasticsearch",
+      "order": 22,
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "1",
+          "ram": "1G"
+        }
+      },
+      "group" : "Elastic Stack",
+      "name" : "Elastic-Search",
+      "memory": "large",
+      "logo" : "images/elasticsearch-logo.png",
+      "icon" : "images/elasticsearch-icon.png",
+      "user": {
+        "name" : "elasticsearch",
+        "id": 3301
+      }
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "ALL_NODES",
+        "masterService": "kube-slave",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      }
+    ],
+    "editableSettings": [
+      {
+        "filename": "eskimo.options",
+        "propertyType": "REGEX",
+        "propertyFormat": "{name}{value}",
+        "commentPrefix": "#",
+        "filesystemService": "elasticsearch",
+        "properties": [
+          {
+            "name": "Xms",
+            "comment": "Startup Heap Size for ES java process\n[ESKIMO_DEFAULT] means memory allocator will decide of ES memory share.\n<strong>THIS NEEDS TO BE THE SAME VALUE AS Xmx OTHERWISE ES WILL LIKELY REFUSE TO START</strong>.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          },
+          {
+            "name": "Xmx",
+            "comment": "Maximum Heap Size for ES java process\n[ESKIMO_DEFAULT] means memory allocator will decide of ES memory share.\n<strong>THIS NEEDS TO BE THE SAME VALUE AS Xms OTHERWISE ES WILL LIKELY REFUSE TO START</strong>.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          }
+        ]
+      },
+      {
+        "filename": "elasticsearch.yml",
+        "propertyType": "variable",
+        "propertyFormat": "{name}: {value}",
+        "commentPrefix": "#",
+        "filesystemService": "elasticsearch",
+        "properties": [
+          {
+            "name": "action.destructive_requires_name",
+            "comment": "Require explicit names when deleting indices",
+            "validationRegex": "^(true)$|^(false)$",
+            "defaultValue": "false"
+          }
+        ]
+      },
+      {
+        "filename": "elasticsearch-index-defaults.properties",
+        "propertyType": "variable",
+        "propertyFormat": "{name}={value}",
+        "commentPrefix": "#",
+        "filesystemService": "elasticsearch",
+        "properties" : [
+          {
+            "name" :  "index.refresh_interval",
+            "comment": "Default refresh interval on new indices. Use format such as 10s, 1m, etc. \nUSE [ESKIMO_DEFAULT] to leave ElasticSearch default value.",
+            "validationRegex": "^([0-9\\.]+[smh]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue" : "[ESKIMO_DEFAULT]"
+          },
+          {
+            "name" :  "index.number_of_replicas",
+            "comment": "Default number of additional replicas on new indices.  \nUSE [ESKIMO_DEFAULT] to let Eskimo compute best value.",
+            "validationRegex": "^([0-9\\.]+)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue" : "[ESKIMO_DEFAULT]"
+          },
+          {
+            "name" :  "index.number_of_shards",
+            "comment": "Default number of additional replicas on new indices.  \nUSE [ESKIMO_DEFAULT] to leave ElasticSearch default value (5).",
+            "validationRegex": "^([0-9\\.]+)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue" : "[ESKIMO_DEFAULT]"
+          }
+        ]
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_log",
+        "name" : "Show Logs",
+        "command": "cat /var/log/elasticsearch/eskimo.log",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "show_search_slow_log",
+        "name" : "Show Search Slow Logs",
+        "command": "cat /var/log/elasticsearch/eskimo_index_search_slowlog.log",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "show_index_slow_log",
+        "name" : "Show Indexing Slow Logs",
+        "command": "cat /var/log/elasticsearch/eskimo_index_indexing_slowlog.log",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "show_gc_log",
+        "name" : "Show GC Logs",
+        "command": "cat /var/log/elasticsearch/gc.log",
+        "icon": "fa-file"
+      }
+    ]
+  },
+
+
+
+  "kibana" : {
+    "config": {
+      "imageName" : "kibana",
+      "order": 23,
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "0.4",
+          "ram": "600M"
+        }
+      },
+      "unique": true,
+      "group" : "Elastic Stack",
+      "name" : "Kibana",
+      "memory": "medium",
+      "logo" : "images/kibana-logo.png",
+      "icon" : "images/kibana-icon.png",
+      "user": {
+        "name" : "elasticsearch",
+        "id": 3301
+      }
+    },
+    "ui": {
+      "urlTemplate": "./kibana/app/home",
+      "proxyTargetPort" : 31562,
+      "waitTime": 10000,
+      "role" : "*",
+      "title" : "Kibana",
+      "applyStandardProxyReplacements": false,
+      "proxyReplacements" : [
+        {
+          "type" : "PLAIN",
+          "source" : "'/kibana",
+          "target" : "'/{PREFIX_PATH}"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "\"/kibana",
+          "target" : "\"/{PREFIX_PATH}"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "&quot;/kibana",
+          "target" : "&quot;/{PREFIX_PATH}"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "url(/kibana",
+          "target" : "url(/{PREFIX_PATH}"
+        }
+      ]
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "elasticsearch",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": false
+      }
+    ],
+    "editableSettings" : [
+      {
+        "filename": "node.options",
+        "filesystemService": "kibana",
+        "propertyType": "REGEX",
+        "propertyFormat": "{name}={value}",
+        "commentPrefix": "#",
+        "properties": [
+          {
+            "name": "max-old-space-size",
+            "comment": "Maximum Old Space Size of the nodejs runtime for Kibana. <b>Expressed in MB</b>",
+            "validationRegex": "^([0-9\\.]+)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          }
+        ]
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_log",
+        "name" : "Show Logs",
+        "command": "cat /var/log/elasticsearch/kibana/kibana.log",
+        "icon": "fa-file"
+      }
+    ]
+  },
+
+
+
+  "zeppelin" : {
+    "config": {
+      "imageName" : "zeppelin",
+      "order": 24,
+      "unique": true,
+      "kubernetes": true,
+      "kubeConfig": {
+        "request": {
+          "cpu": "1",
+          "ram": "1G"
+        }
+      },
+      "name" : "Zeppelin",
+      "memory": "verylarge",
+      "____comment": "We need to know about the spark executor memory to set",
+      "memoryAdditional__commentedOut": ["spark-runtime"],
+      "logo" : "images/zeppelin-logo.png",
+      "icon" : "images/zeppelin-icon.png",
+      "user": {
+        "name": "spark",
+        "id": 3302
+      }
+    },
+    "ui": {
+      "kubeProxy": true,
+      "__comment_urlTemplate": "Going through Kubectl proxy.",
+      "urlTemplate": "zeppelin/api/v1/namespaces/eskimo/services/zeppelin:31008/proxy/",
+      "__comment_proxyTargetPort": "Kubectl proxy target port",
+      "proxyTargetPort" : 8001,
+      "waitTime": 8000,
+      "role" : "*",
+      "title" : "Zeppelin",
+      "proxyReplacements" : [
+        {
+          "__comment": "zeppelin-0.11",
+          "type" : "PLAIN",
+          "source" : "(\"https:\"===location.protocol?\"wss:\":\"ws:\")+\"//\"+location.hostname+\":\"+this.getPort()+e(location.pathname)+\"/ws\"}",
+          "target" : "(\"https:\"===location.protocol?\"wss:\":\"ws:\")+\"//\"+location.hostname+\":\"+this.getPort()+\"/{CONTEXT_PATH}ws\"+e(location.pathname).replace(\"{CONTEXT_PATH}\" != \"\" ? \"{CONTEXT_PATH}\" : \"dummy_not_matching_anything\", \"\")+\"/ws\"}"
+        },
+        {
+          "__comment": "zeppelin-0.11",
+          "type" : "PLAIN",
+          "source" : "location.protocol+\"//\"+location.hostname+\":\"+this.getPort()+location.pathname",
+          "target" : "location.protocol+\"//\"+location.hostname+\":\"+this.getPort()+location.pathname.replace(\"{CONTEXT_PATH}\" != \"\" ? \"{CONTEXT_PATH}\" : \"dummy_not_matching_anything\", \"\")"
+        },
+        {
+          "__comment": "zeppelin-0.10",
+          "type" : "PLAIN",
+          "source" : "return t+\"//\"+location.hostname+\":\"+this.getPort()+e(location.pathname)+\"/ws",
+          "target" : "return t + \"//\" + location.hostname + \":\" + this.getPort() + \"/{CONTEXT_PATH}ws\" + e(location.pathname).replace(\"{CONTEXT_PATH}\" != \"\" ? \"{CONTEXT_PATH}\" : \"dummy_not_matching_anything\", \"\") + \"/ws"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "!function(e){var t={};",
+          "target" : "function noOp(){}; !function(e){var t={};"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "console.log(\"Send",
+          "target" : "noOp(\"Send"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "console.log(\"Receive",
+          "target" : "noOp(\"Receive"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "<li><a href=\"/zeppelin/next\">Try the new Zeppelin</a></li>",
+          "target" : ""
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "%7B%7Bnote.id%7D%7D",
+          "target" : "{{note.id}}"
+        },
+        {
+          "type" : "PLAIN",
+          "source" : "%7B%7Bnode.id%7D%7D",
+          "target" : "{{node.id}}"
+        }
+      ]
+    },
+    "dependencies": [
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "elasticsearch",
+        "numberOfMasters": 1,
+        "mandatory": false,
+        "restart": false
+      },
+      {
+        "masterElectionStrategy": "FIRST_NODE",
+        "masterService": "zookeeper",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      },
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "gluster",
+        "numberOfMasters": 1,
+        "mandatory": true,
+        "restart": true
+      },
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "logstash",
+        "numberOfMasters": 1,
+        "mandatory": false,
+        "restart": true
+      },
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "kafka",
+        "numberOfMasters": 1,
+        "mandatory": false,
+        "restart": false
+      },
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "flink-runtime",
+        "numberOfMasters": 1,
+        "mandatory": false,
+        "restart": false
+      },
+      {
+        "masterElectionStrategy": "RANDOM",
+        "masterService": "spark-runtime",
+        "numberOfMasters": 1,
+        "mandatory": false,
+        "restart": false
+      }
+    ],
+    "editableSettings": [
+      {
+        "filename": "zeppelin-env.sh",
+        "filesystemService": "zeppelin",
+        "propertyType": "REGEX",
+        "propertyFormat": "{name}{value}",
+        "commentPrefix": "#",
+        "properties": [
+          {
+            "name": "Xmx",
+            "comment": "Maximum heap size memory allocated to Zeppelin process.\n[ESKIMO_DEFAULT] leaves the default memory allocation strategy decide of it.",
+            "validationRegex": "^([0-9\\.]+[kmgt]?)$|^(\\[ESKIMO_DEFAULT\\])$",
+            "defaultValue": "[ESKIMO_DEFAULT]"
+          }
+        ]
+      },
+      {
+        "filename": "eskimo_settings.conf",
+        "filesystemService": "zeppelin",
+        "propertyType": "variable",
+        "propertyFormat": "{name}={value}",
+        "commentPrefix": "#",
+        "properties": [
+          {
+            "name": "zeppelin_note_isolation",
+            "comment": "The setting 'zeppelin_note_isolation' is used to control whether interpreter processes are created and managed globally for the whole zeppelin process or per note.\nPossible values are:\n 'shared' : one single instance of every interpreter is created and shared among users and notes (better for laboratory).\n 'per_note' : one instance of interpreter is created for every note (better for production - but requires a lot of RAM).\n",
+            "validationRegex": "^(per_note)$|^(shared)$",
+            "defaultValue": "shared"
+          },
+          {
+            "name": "zeppelin_jobmanager_enable",
+            "comment": "The setting 'zeppelin_jobmanager_enable' is used to enable the job manager in Zeppelin. The Job tab in zeppelin page seems not so useful instead it cost lots of memory and affect the performance, so it's disabled by default..\n",
+            "validationRegex": "^(true)$|^(false)$",
+            "defaultValue": "false"
+          }
+        ]
+      }
+    ],
+    "commands" : [
+      {
+        "id" : "show_log",
+        "name" : "Show Logs",
+        "command": "sudo cat /var/log/spark/zeppelin/`ls -t /var/log/spark/zeppelin/ | grep zeppelin-eskimo- | head -n 1`",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "show_shell_log",
+        "name" : "Show Shell Int. Logs",
+        "command": "sudo cat /var/log/spark/zeppelin/`ls -t /var/log/spark/zeppelin/ | grep zeppelin-interpreter-sh | head -n 1`",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "show_python_log",
+        "name" : "Show Python Int. Logs",
+        "command": "sudo cat /var/log/spark/zeppelin/`ls -t /var/log/spark/zeppelin/ | grep zeppelin-interpreter-python | head -n 1`",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "show_spark_log",
+        "name" : "Show Spark Int. Logs",
+        "command": "sudo cat /var/log/spark/zeppelin/`ls -t /var/log/spark/zeppelin/ | grep zeppelin-interpreter-spark | head -n 1`",
+        "icon": "fa-file"
+      },
+      {
+        "id" : "show_flink_log",
+        "name" : "Show Flink Int. Logs",
+        "command": "sudo cat /var/log/spark/zeppelin/`ls -t /var/log/spark/zeppelin/ | grep zeppelin-interpreter-flink | head -n 1`",
+        "icon": "fa-file"
+      }
+    ]
+  }
+
+}

@@ -1,0 +1,7 @@
+target
+.classpath
+.idea
+.project
+storagePath.conf
+logs
+venv

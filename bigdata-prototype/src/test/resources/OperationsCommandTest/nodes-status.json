@@ -1,0 +1,21 @@
+{
+  "database-manager_installed_on_IP_192-168-10-11": "OK",
+  "database_installed_on_IP_192-168-10-13": "OK",
+  "database_installed_on_IP_192-168-10-14": "OK",
+  "distributed-filesystem_installed_on_IP_192-168-10-11": "OK",
+  "distributed-filesystem_installed_on_IP_192-168-10-13": "OK",
+  "distributed-filesystem_installed_on_IP_192-168-10-14": "OK",
+  "broker-manager_installed_on_IP_192-168-10-11": "OK",
+  "broker_installed_on_IP_192-168-10-13": "OK",
+  "broker_installed_on_IP_192-168-10-14": "OK",
+  "cluster-slave_installed_on_IP_192-168-10-13": "OK",
+  "cluster-slave_installed_on_IP_192-168-10-14": "OK",
+  "cluster-master_installed_on_IP_192-168-10-11": "OK",
+  "distributed-time_installed_on_IP_192-168-10-11": "OK",
+  "distributed-time_installed_on_IP_192-168-10-13": "OK",
+  "distributed-time_installed_on_IP_192-168-10-14": "OK",
+  "calculator-runtime_installed_on_IP_192-168-10-13": "OK",
+  "calculator-runtime_installed_on_IP_192-168-10-14": "OK",
+  "user-console_installed_on_IP_192-168-10-11": "OK",
+  "cluster-manager_installed_on_IP_192-168-10-11": "OK"
+}

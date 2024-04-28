@@ -1,0 +1,429 @@
+#!/bin/bash
+
+#
+# This file is part of the eskimo project referenced at www.eskimo.sh. The licensing information below apply just as
+# well to this individual file than to the Eskimo Project as a whole.
+#
+# Copyright 2019 - 2023 eskimo.sh / https://www.eskimo.sh - All rights reserved.
+# Author : eskimo.sh / https://www.eskimo.sh
+#
+# Eskimo is available under a dual licensing model : commercial and GNU AGPL.
+# If you did not acquire a commercial licence for Eskimo, you can still use it and consider it free software under the
+# terms of the GNU Affero Public License. You can redistribute it and/or modify it under the terms of the GNU Affero
+# Public License  as published by the Free Software Foundation, either version 3 of the License, or (at your option)
+# any later version.
+# Compliance to each and every aspect of the GNU Affero Public License is mandatory for users who did no acquire a
+# commercial license.
+#
+# Eskimo is distributed as a free software under GNU AGPL in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# Affero Public License for more details.
+#
+# You should have received a copy of the GNU Affero Public License along with Eskimo. If not,
+# see <https://www.gnu.org/licenses/> or write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+# Boston, MA, 02110-1301 USA.
+#
+# You can be released from the requirements of the license by purchasing a commercial license. Buying such a
+# commercial license is mandatory as soon as :
+# - you develop activities involving Eskimo without disclosing the source code of your own product, software,
+#   platform, use cases or scripts.
+# - you deploy eskimo as part of a commercial product, platform or software.
+# For more information, please contact eskimo.sh at https://www.eskimo.sh
+#
+# The above copyright notice and this licensing notice shall be included in all copies or substantial portions of the
+# Software.
+#
+
+echo_usage() {
+    echo "eskimo-kubectl COMMAND SERVICE NODE"
+    echo "where "
+    echo "    COMMAND in [logs, start, stop, restart, uninstall, delete_node]"
+    echo "    SERVICE is the target eskimo kubernetes service "
+    echo "            (pass NULL for commands not requiring service)"
+    echo "    NODE the target node where the service is expected to run "
+    echo "         (to distinguish multiple instances services, pass NULL when not required)"
+}
+
+if [[ $1 == "-h" ]]; then
+    echo_usage
+    exit 0
+fi
+
+if [[ $1 == "" ]]; then
+    echo "Expecting Command first argument"
+    echo_usage
+    exit 1
+fi
+export COMMAND=$1
+
+if [[ $2 == "" ]]; then
+    echo "Expecting target service as second argument"
+    echo_usage
+    exit 2
+fi
+export SERVICE=$2
+
+if [[ $3 == "" ]]; then
+    echo "Expecting target node as third argument"
+    echo_usage
+    exit 3
+fi
+export NODE=$3
+
+export PATH=$PATH:/usr/local/bin
+
+. /usr/local/sbin/eskimo-utils.sh
+
+if [[ $TEST_MODE != "true" ]]; then
+    . /etc/eskimo_topology.sh
+fi
+
+
+function call-kubectl () {
+    # all args as "$@"
+    tmpfile=$(mktemp /tmp/kube-ctl-error-logs.XXXXXX)
+
+    for i in $(seq 1 4); do
+
+        result=$(kubectl "$@" 2> $tmpfile)
+        retCode=$?
+
+        if [[ $retCode == 0 ]]; then
+            if [[ "$result" != "" ]]; then
+                echo "$result"
+            fi
+            cat $tmpfile 2>&1
+            #rm -f $tmpfile
+            return 0
+        fi
+
+        if [[ $(grep -F "did you specify the right host or port" $tmpfile) != "" && $i -lt 4 ]]; then
+            # kube-api is not answering, retry in 4 seconds
+            sleep 4
+        else
+
+            if [[ "$result" != "" ]]; then
+                echo "$result"
+            fi
+            cat $tmpfile 2>&1
+            #rm -f $tmpfile
+            return $retCode
+        fi
+    done
+}
+
+
+MULTIPLE_SERVICES_PODS=$(call-kubectl get pod --all-namespaces -o custom-columns=NAME:metadata.name | cut -d ' ' -f 1 | grep -e '^[a-z]\+-[0-9]\+$')
+SINGLE_SERVICES_PODS=$(call-kubectl get pod --all-namespaces -o custom-columns=NAME:metadata.name | cut -d ' ' -f 1 | grep -e '^[a-z\-]\+-[a-z0-9]\+-[a-z0-9]\+$')
+
+MULTIPLE_SERVICES_NAMES=$(call-kubectl get pod --all-namespaces -o custom-columns=NAME:metadata.name | cut -d ' ' -f 1 | grep -e '^[a-z]\+-[0-9]\+$' | sed 's/\([a-z]*\).*/\1/')
+
+
+function get_multiple_service_pod() {
+
+    if [[ "$1" == "" ]]; then
+        echo "ERROR: get_multiple_service_pod takes service as first argument"
+        exit 1
+    fi
+    local SERVICE=$1
+
+    if [[ "$2" == "" ]]; then
+        echo "ERROR: get_multiple_service_pod takes node as second argument"
+        exit 2
+    fi
+    local NODE=$2
+
+    local IS_MULTIPLE=""
+    if [[ $(echo "$MULTIPLE_SERVICES_NAMES" | grep $SERVICE) ]]; then
+        IS_MULTIPLE=true
+    fi
+
+    if [[ ! $IS_MULTIPLE ]] ; then
+        echo "ERROR: get_multiple_service_pod should only be called for multiple services"
+        exit 3
+    fi
+
+    CANDIDATES=$(echo "$MULTIPLE_SERVICES_PODS" | grep $SERVICE)
+    IFS=$'\n'
+    for pod in $(call-kubectl get pods --all-namespaces -o custom-columns=NAME:metadata.name,NODE:status.hostIP); do
+        for candidate in $(echo "$CANDIDATES"); do
+            if [[ "$(echo $pod | grep $candidate)" != "" ]]; then
+                #FOUND_NODE=`echo $pod | sed 's/ \+/ /' | cut -d ' ' -f 2`
+                if [[ "$(echo $pod | grep $NODE)" != "" ]]; then
+                    FOUND_POD=$(echo $pod | cut -d ' ' -f 1)
+                    break 2
+                 fi
+            fi
+        done
+    done
+
+    if [[ "$FOUND_POD" == "" ]]; then
+        echo "ERROR: get_multiple_service_pod couldn't find pod"
+        exit 4
+    fi
+
+    echo "$FOUND_POD"
+}
+
+
+function get_pod() {
+    if [[ "$1" == "" ]]; then
+        echo "ERROR: get_pod takes service as first argument"
+        exit 1
+    fi
+    local SERVICE=$1
+
+    if [[ "$2" == "" ]]; then
+        echo "ERROR: get_pod takes node as second argument"
+        exit 2
+    fi
+    local NODE=$2
+
+    local IS_MULTIPLE=""
+    if [[ $(echo "$MULTIPLE_SERVICES_NAMES" | grep $SERVICE) ]]; then
+        IS_MULTIPLE=true
+    fi
+
+    local POD
+    if [[ $IS_MULTIPLE ]]; then
+        POD=$(get_multiple_service_pod $SERVICE $NODE)
+    else
+        POD=$(echo "$SINGLE_SERVICES_PODS" | grep $SERVICE)
+    fi
+
+    if [[ "$POD" == "" || $(echo $POD | grep "ERROR") != "" ]]; then
+        echo "ERROR: Failed to get pod for $SERVICE on $NODE"
+        echo "$POD"
+        exit 3
+    fi
+
+    echo "$POD"
+}
+
+function get_namespace() {
+
+    if [[ "$1" == "" ]]; then
+        echo "ERROR: get_namespace takes pod as first argument"
+        exit 1
+    fi
+    local POD=$1
+
+    NAMESPACE=$(call-kubectl get pod --all-namespaces -o custom-columns=NAME:metadata.name,NAMESPACE:metadata.namespace | grep $POD | sed 's/  \+/ /g' | cut -d ' ' -f 2)
+    if [[ "$NAMESPACE" == "" ]]; then
+        echo "ERROR: Couldn't get namespace for pod $POD"
+        exit 2
+    fi
+
+    echo "$NAMESPACE"
+}
+
+
+function show_log() {
+
+    if [[ "$1" == "" ]]; then
+        echo "show_log takes service as first argument"
+        exit 1
+    fi
+    local SERVICE=$1
+
+    if [[ "$2" == "" ]]; then
+        echo "show_log takes node as second argument"
+        exit 1
+    fi
+    local NODE=$2
+
+    echo " - Showing logs for Service $SERVICE on $NODE"
+
+    local POD=$(get_pod $SERVICE $NODE)
+    if [[ $POD == "" || $(echo $POD | grep "ERROR") != "" ]]; then
+        echo "ERROR: Couldn't get POD"
+        echo "$POD"
+        exit 2
+    fi
+
+    echo "   + POD is $POD"
+
+    local NAMESPACE=$(get_namespace $POD)
+    if [[ $NAMESPACE == "" || $(echo $NAMESPACE | grep "ERROR") != "" ]]; then
+        echo "ERROR: Couldn't get NAMESPACE"
+        echo "$NAMESPACE"
+        exit 3
+    fi
+
+    echo "   + NAMESPACE is $NAMESPACE"
+
+    call-kubectl -n $NAMESPACE logs $POD
+}
+
+
+function uninstall_service() {
+
+    if [[ "$1" == "" ]]; then
+        echo "uninstall_service takes service as first argument"
+        exit 1
+    fi
+    local SERVICE=$1
+
+    echo " - Uninstall Service $SERVICE"
+
+    local SERVICE_FILE=/var/lib/eskimo/kube-services/$SERVICE.k8s.yaml.sh
+    if [[ $TEST_MODE != "true" && ! -f $SERVICE_FILE ]]; then
+        echo "File $SERVICE_FILE can't be found !";
+        exit 2
+    fi
+
+    echo "   + Deleting $SERVICE"
+    # shellcheck disable=SC1090
+    . $SERVICE_FILE | call-kubectl delete -f -
+
+    echo "   + Deleting service file"
+    sudo rm -f $SERVICE_FILE
+}
+
+
+function restart_service() {
+
+    if [[ "$1" == "" ]]; then
+        echo "restart_service takes service as first argument"
+        exit 1
+    fi
+    local SERVICE=$1
+
+    echo " - Restart Service $SERVICE"
+
+    local SERVICE_FILE=/var/lib/eskimo/kube-services/$SERVICE.k8s.yaml.sh
+
+    if [[ $TEST_MODE == "true" || -f $SERVICE_FILE ]]; then
+        echo "   + Deleting $SERVICE"
+        # shellcheck disable=SC1090
+        . $SERVICE_FILE | call-kubectl delete -f -
+
+        if [[ $TEST_MODE != "true" ]]; then
+            sleep 10
+        fi
+
+        echo "   + (Re-)applying $SERVICE"
+        # shellcheck disable=SC1090
+        . $SERVICE_FILE | call-kubectl apply -f -
+    else
+        echo "$SERVICE_FILE doesn't exist. Ignoring ..."
+    fi
+}
+
+
+function stop_service() {
+
+    if [[ "$1" == "" ]]; then
+        echo "show_log takes service as first argument"
+        exit 1
+    fi
+    local SERVICE=$1
+
+    echo " - Stopping Service $SERVICE"
+
+    local IS_MULTIPLE=""
+    if [[ $(echo "$MULTIPLE_SERVICES_NAMES" | grep $SERVICE) ]]; then
+        IS_MULTIPLE=true
+    fi
+
+    local POD=$(get_pod $SERVICE $NODE)
+    if [[ $POD == "" || $(echo $POD | grep "ERROR") != "" ]]; then
+        echo "ERROR: Couldn't get POD"
+        echo "$POD"
+        exit 2
+    fi
+
+    echo "   + POD is $POD"
+
+    local NAMESPACE=$(get_namespace $POD)
+    if [[ $NAMESPACE == "" || $(echo $NAMESPACE | grep "ERROR") != "" ]]; then
+        echo "ERROR: Couldn't get NAMESPACE"
+        echo "$NAMESPACE"
+        exit 3
+    fi
+
+    if [[ $IS_MULTIPLE ]]; then
+
+        echo "   + Deleting statefulset $SERVICE"
+        call-kubectl -n $NAMESPACE delete statefulset $SERVICE
+
+    else
+
+        echo "   + Deleting deployment $SERVICE"
+        call-kubectl -n $NAMESPACE delete deployment $SERVICE
+    fi
+}
+
+
+function start_service() {
+
+    if [[ "$1" == "" ]]; then
+        echo "show_log takes service as first argument"
+        exit 1
+    fi
+    local SERVICE=$1
+
+    echo " - Starting Service $SERVICE"
+
+    local SERVICE_FILE=/var/lib/eskimo/kube-services/$SERVICE.k8s.yaml.sh
+    if [[ $TEST_MODE != "true" && ! -f $SERVICE_FILE ]]; then
+        echo "File $SERVICE_FILE can't be found !";
+        exit 2
+    fi
+
+    echo "   + (Re-)applying $SERVICE"
+    # shellcheck disable=SC1090
+    . $SERVICE_FILE | call-kubectl apply -f -
+}
+
+function delete_node() {
+
+    if [[ "$1" == "" ]]; then
+        echo "delete_node takes node as first argument"
+        exit 1
+    fi
+    local NODE=$1
+
+    echo " - Deleting node $NODE"
+
+    echo "   + cordon node"
+    kubectl cordon $NODE
+
+    echo "   + Delete / force delete all pods from node"
+    for pod in $(kubectl get pods -o wide | grep $NODE | cut -d ' ' -f 1); do
+        kubectl delete pod $pod --wait=true --timeout=30s --now=true
+        if [[ $? == 0 ]]; then
+            kubectl delete pod $pod --wait=false --force=true
+        fi
+    done
+
+    echo "   + drain node"
+    kubectl drain $NODE --delete-local-data --force --timeout=120s
+
+    echo "   + delete node"
+    kubectl delete node $NODE
+}
+
+
+if [[ "$COMMAND" == "logs" ]]; then
+    show_log $SERVICE $NODE
+
+elif [[ "$COMMAND" == "restart" ]]; then
+    restart_service $SERVICE
+
+elif [[ "$COMMAND" == "start" ]]; then
+    start_service $SERVICE
+
+elif [[ "$COMMAND" == "stop" ]]; then
+    stop_service $SERVICE
+
+elif [[ "$COMMAND" == "uninstall" ]]; then
+    uninstall_service $SERVICE
+
+elif [[ "$COMMAND" == "delete_node" ]]; then
+    delete_node $NODE
+
+else
+    echo "Unknown Command : $COMMAND"
+    exit 100
+fi

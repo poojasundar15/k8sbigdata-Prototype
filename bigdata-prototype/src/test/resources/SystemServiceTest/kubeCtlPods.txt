@@ -1,0 +1,13 @@
+NAMESPACE              NAME                                         READY   STATUS              RESTARTS      AGE   IP              NODE            NOMINATED NODE   READINESS GATES
+eskimo                 database-manager-6bbc978c7f-hvrk8                     1/1     Running             0             52m   172.30.1.3      192.168.56.54   <none>           <none>
+eskimo                 database-0                              1/1     Running             1 (53m ago)   55m   172.30.0.5      192.168.10.11   <none>           <none>
+eskimo                 database-1                              1/1     Running             0             55m   172.30.3.2      192.168.10.12   <none>           <none>
+eskimo                 broker-0                                      1/1     Running             0             46m   172.30.0.7      192.168.10.11   <none>           <none>
+eskimo                 broker-1                                      1/1     Running             0             46m   172.30.3.5      192.168.10.12   <none>           <none>
+eskimo                 broker-manager-6675fc5459-wc2fc               1/1     Running             0             44m   172.30.0.8      192.168.10.11   <none>           <none>
+eskimo                 calculator-runtime-85df6df9c6-klnd6               1/1     Running             0             57m   172.30.0.4      192.168.10.11   <none>           <none>
+eskimo                 spark-shell-7583f08619ab3172-exec-1          0/1     ContainerCreating   0             12s   <none>          192.168.10.12   <none>           <none>
+eskimo                 user-console-744b78b786-rmjcx                    1/1     Running             0             29m   172.30.2.5      192.168.10.12   <none>           <none>
+kube-system            coredns-b76f55785-qbv27                      1/1     Running             0             60m   172.30.0.3      192.168.10.11   <none>           <none>
+cluster-dashboard   dashboard-metrics-scraper-74f65d5dbd-wrtnk   1/1     Running             0             60m   192.168.10.12   192.168.10.12   <none>           <none>
+cluster-dashboard   cluster-dashboard-6f9f4768b5-cvhrb        1/1     Running             0             60m   192.168.10.11   192.168.10.11   <none>           <none>

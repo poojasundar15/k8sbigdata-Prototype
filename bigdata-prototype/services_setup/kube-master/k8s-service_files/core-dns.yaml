@@ -1,0 +1,241 @@
+
+#
+# This file is part of the eskimo project referenced at www.eskimo.sh. The licensing information below apply just as
+# well to this individual file than to the Eskimo Project as a whole.
+#
+# Copyright 2019 - 2023 eskimo.sh / https://www.eskimo.sh - All rights reserved.
+# Author : eskimo.sh / https://www.eskimo.sh
+#
+# Eskimo is available under a dual licensing model : commercial and GNU AGPL.
+# If you did not acquire a commercial licence for Eskimo, you can still use it and consider it free software under the
+# terms of the GNU Affero Public License. You can redistribute it and/or modify it under the terms of the GNU Affero
+# Public License  as published by the Free Software Foundation, either version 3 of the License, or (at your option)
+# any later version.
+# Compliance to each and every aspect of the GNU Affero Public License is mandatory for users who did no acquire a
+# commercial license.
+#
+# Eskimo is distributed as a free software under GNU AGPL in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# Affero Public License for more details.
+#
+# You should have received a copy of the GNU Affero Public License along with Eskimo. If not,
+# see <https://www.gnu.org/licenses/> or write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+# Boston, MA, 02110-1301 USA.
+#
+# You can be released from the requirements of the license by purchasing a commercial license. Buying such a
+# commercial license is mandatory as soon as :
+# - you develop activities involving Eskimo without disclosing the source code of your own product, software,
+#   platform, use cases or scripts.
+# - you deploy eskimo as part of a commercial product, platform or software.
+# For more information, please contact eskimo.sh at https://www.eskimo.sh
+#
+# The above copyright notice and this licensing notice shall be included in all copies or substantial portions of the
+# Software.
+#
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: coredns
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: system:coredns
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+      - services
+      - pods
+      - namespaces
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - list
+      - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: system:coredns
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:coredns
+subjects:
+  - kind: ServiceAccount
+    name: coredns
+    namespace: kube-system
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health {
+            lameduck 5s
+        }
+        ready
+        kubernetes cluster.local CLUSTER_DNS_DOMAIN in-addr.arpa ip6.arpa {
+            pods insecure
+            fallthrough in-addr.arpa ip6.arpa
+            ttl 30
+        }
+        prometheus :9153
+        forward . /etc/k8s/shared/resolv.conf
+        loop
+        cache 30        
+        reload
+        loadbalance
+    }
+
+# originally : forward . /etc/resolv.conf
+# also tried : forward . 8.8.8.8
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coredns
+  namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/name: "CoreDNS"
+spec:
+  # replicas: not specified here:
+  # 1. Default is 1.
+  # 2. Will be tuned in real time if DNS horizontal auto-scaling is turned on.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      k8s-app: kube-dns
+  template:
+    metadata:
+      labels:
+        k8s-app: kube-dns
+    spec:
+      priorityClassName: system-cluster-critical
+      serviceAccountName: coredns
+      tolerations:
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"
+      nodeSelector:
+        kubernetes.io/os: linux
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: k8s-app
+                    operator: In
+                    values: ["kube-dns"]
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: coredns
+          image: kubernetes.registry:5000/coredns/coredns:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: 170Mi
+            requests:
+              cpu: 100m
+              memory: 70Mi
+          args: [ "-conf", "/etc/coredns/Corefile" ]
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/coredns
+              readOnly: true
+            - name: etc-k8s-shared
+              mountPath: /etc/k8s/shared
+              readOnly: true
+          ports:
+            - containerPort: 53
+              name: dns
+              protocol: UDP
+            - containerPort: 53
+              name: dns-tcp
+              protocol: TCP
+            - containerPort: 9153
+              name: metrics
+              protocol: TCP
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8181
+              scheme: HTTP
+      dnsPolicy: Default
+      volumes:
+        - name: etc-k8s-shared
+          hostPath:
+            path: /etc/k8s/shared
+        - name: config-volume
+          configMap:
+            name: coredns
+            items:
+              - key: Corefile
+                path: Corefile
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-dns
+  namespace: kube-system
+  annotations:
+    prometheus.io/port: "9153"
+    prometheus.io/scrape: "true"
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "CoreDNS"
+spec:
+  selector:
+    k8s-app: kube-dns
+  clusterIP: CLUSTER_DNS_SVC_IP
+  ports:
+    - name: dns
+      port: 53
+      protocol: UDP
+    - name: dns-tcp
+      port: 53
+      protocol: TCP
+    - name: metrics
+      port: 9153
+      protocol: TCP

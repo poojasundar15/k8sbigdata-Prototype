@@ -1,0 +1,64 @@
+
+[[chap-limitations]]
+== Limitations within Eskimo Community Edition version 0.5
+
+Eskimo CE - Community Edition -  *version 0.5* has some limitations regarding the state of the art of what should be its
+behaviour from its DNA and its intents and compared to Eskimo Enterprise Edition which addresses or works around most of
+these limitations with commercial features.
+
+These limitations are described in this chapter.
+
+[[etcd-limitations]]
+=== etcd and node removal / re-installation after initial installation
+
+Etcd is the distributed, reliable key-value store used by Kubernetes to store its runtime configuration. Whenever a
+node is added or removed from etcd, it needs to be explicitly removed, respectively added to the etcd cluster with the
+use of the `etcdctl` command.
+
+(Sidenote : these commands are automated and as such not required within *Eskimo Enterprise Edition*. We will likely
+backport this feature to Eskimo Community Edition in the next version - v0.6)
+
+==== Node removal
+
+When a node running etcd is removed, either just before or right after removal, the node needs to be explictely removed
+from the etcd cluster.
+
+Start by discovering the ID of the node by using `etcdctl member list`:
+
+.etcdctl member list
+----
+[root@test-node1 vagrant]# export PATH=/usr/local/bin:$PATH
+[root@test-node1 vagrant]# etcdctl member list
+2bbedeef7a321ca9, started, node2, http://192.168.56.22:2380, https://192.168.56.22:2379,https://localhost:2379, false
+7a6ff46678be7f4c, started, node1, http://192.168.56.21:2380, https://192.168.56.21:2379,https://localhost:2379, false
+d9f480e3927c3ea0, started, node4, http://192.168.56.24:2380, https://192.168.56.24:2379,https://localhost:2379, false
+dab2e3fec0c94fc1, started, node3, http://192.168.56.23:2380, https://192.168.56.23:2379,https://localhost:2379, false
+----
+
+If, for instance, the node one wants to remove from the cluster is `node4`, then use its ID to remove the etcd node:
+
+.etcdctl member remove
+----
+[root@test-node1 vagrant]# etcdctl member remove 1b7723bd1b46a12f
+----
+
+==== Node addition
+
+In the same way, if an etcd node is added to the cluster after the initial etcd setup, it needs unfortunately to be
+added explicitly to the etcd cluster *before* the eskimo cluster node running it is installed (or at least before the
+etcd service is installed on that node).
+
+The command would be as follows:
+
+.etcdctl member add
+----
+[root@test-node1 vagrant]# etcdctl member add node4 --peer-urls=http://192.168.56.24:2380
+----
+
+==== Node re-installation
+
+When a node is reinstalled, the ID of the etcd service instance will be reinitialized. Even though both nodes names and
+peer URLs will be the same, as far as etcd is concerned, those would be two different etcd instances.
+
+So one needs to first remove the previous instance and then add it back using both commands above.
+

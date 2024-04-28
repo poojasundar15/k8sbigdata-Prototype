@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--suppress MavenModelInspection -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>BigData-Prototype</artifactId>
+    <packaging>war</packaging>
+    <name>Eskimo CE</name>
+    <version>0.6-SNAPSHOT</version>
+    <description>Eskimo Platform Console - Community Edition</description>
+    <url>https://www.eskimo.sh</url>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.9</version>
+    </parent>
+
+    <properties>
+        <build.timestamp>${maven.build.timestamp}</build.timestamp>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+        <argLine>-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8</argLine>
+        <!-- this is required to override spring-boot's stupidly pre-defined version -->
+        <selenium.version>4.7.2</selenium.version>
+        <!--
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.projectKey>eskimo-sh-sonarqube-key</sonar.projectKey>
+        <sonar.organization>Eskimo.sh</sonar.organization>
+        <sonar.login>ET8lYJzM4rRrP7mMqMEcDpZkt7MY9bUIFitZ8hnfOFoMTqJywc8s/tMwpCRHSKk3H2sWsMQ6WiqOWSeVokJegIMeIzQ1430Bx80Drfa9sS3PNan5mDXDBngkggybqQPTzKfRLAHJlN4KIbJfE8xnWYVINl4K75wrelR6miDeUYDwRFUf6kHSyIOPtJo28n5bZEmH7LJdxFegun7guyxByRSFd9edTBqg+nu4HmwIlKYKpFqyZIKxdkYpFVL8im3jUTXbXiHbTq4n0rM2kgBABPGcrPvbn2EB+Lwk5BXUVIPz/IogPySZrjouS6DMmJdzq/AyRf9mhfF5AnDQZ4alI4f0PSF4smpERzOkN5FPi0sUR7CnWlaL9WcEnyIHRf4W02VHr+2EZlxULP/ygehu2wrAtti4xXFeSSAzbXMqHd4jsFKzQVa+MEoQbdeE2nvlw8HWObDR5oqHb+l2xOzQkJjULl9edFgqrmm3tZ73f+ogerN4oRij+sETvwqRnL687rfvc11FJYxYL4+x/hdoB9FfDGeQlMMhoLwDqpGE5TdMa/xSPntA/C4RzY7/Ear4oq3ROndAd7gJAtL41nsGLIw3CmuCl9rdkrmkg44Up4oAfbzcbvIwyO9XB/qY+lQRoVGZqdWeR0pkf16PQNzt0e7Q3/zQqhloDcFynlniT3A=</sonar.login>
+        -->
+    </properties>
+
+    <dependencies>
+
+        <!-- json -->
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20230227</version>
+        </dependency>
+
+        <!-- Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- Web with Tomcat + Embed -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+
+        <!-- https://github.com/jenkinsci/trilead-ssh2 -->
+        <dependency>
+            <groupId>org.jenkins-ci</groupId>
+            <artifactId>trilead-ssh2</artifactId>
+            <version>build-217-jenkins-27</version>
+        </dependency>
+        <dependency>
+            <groupId>net.i2p.crypto</groupId>
+            <artifactId>eddsa</artifactId>
+            <version>0.3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.26</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.22</version>
+        </dependency>
+
+        <!-- SSH client -->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>5.3.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.tntim96</groupId>
+            <artifactId>JSCover</artifactId>
+            <version>2.0.16</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- for Web Tests -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>11.0.14</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-io</artifactId>
+            <version>11.0.14</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-http</artifactId>
+            <version>11.0.14</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>11.0.14</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- SSH testing -->
+        <dependency>
+            <groupId>org.apache.sshd</groupId>
+            <artifactId>sshd-core</artifactId>
+            <version>2.9.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sshd</groupId>
+            <artifactId>sshd-sftp</artifactId>
+            <version>2.9.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sshd</groupId>
+            <artifactId>sshd-scp</artifactId>
+            <version>2.9.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.70</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Web testing -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-ssi</artifactId>
+            <version>9.0.73</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.httpunit</groupId>
+            <artifactId>httpunit</artifactId>
+            <version>1.7.3</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xmlParserAPIs</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.2.1</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.stefanbirkner/system-lambda -->
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-lambda</artifactId>
+            <version>1.2.1</version>
+            <scope>test</scope>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>application.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-java</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>11</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                    <release>11</release>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/test/javawebtests</source>
+                                <source>src/test/javashelltests</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <environmentVariables>
+                        <LANG>C</LANG>
+                        <LC_ALL>C</LC_ALL>
+                    </environmentVariables>
+                    <!-- Activate the use of TCP to transmit events to the plugin -->
+                    <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
+                    <argLine>@{argLine} -Xmx2600m</argLine>
+                </configuration>
+            </plugin>
+
+            <!-- Package as an executable war -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.7.9</version>
+            </plugin>
+
+            <!-- dereference symlinks in services_setup and packages_dev-->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>dereferenceServicesSymLinks</id>
+                        <phase>test</phase>
+                        <configuration>
+                            <target>
+                                <copy todir="${project.build.directory}/services_setup">
+                                    <fileset followsymlinks="true" dir="${project.basedir}/services_setup" includes="**/*"/>
+                                </copy>
+                                <copy todir="${project.build.directory}/packages_dev">
+                                    <fileset followsymlinks="true" dir="${project.basedir}/packages_dev" includes="**/*"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- All Distribution packaging -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+
+                    <!-- First: Utility jar -->
+                    <execution>
+                        <id>eskimo-utility-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/packaged-utility-jar.xml</descriptor>
+                            </descriptors>
+                            <finalName>eskimo-ce-utility-${project.version}</finalName>
+                        </configuration>
+                    </execution>
+
+                    <!-- Then: Eskimo Distribution package -->
+                    <execution>
+                        <id>eskimo-distribution</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/packaged-web-app.xml</descriptor>
+                            </descriptors>
+                            <finalName>eskimo-ce-${project.version}</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>screenshots</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <configuration>
+                            <includeProjectDependencies>true</includeProjectDependencies>
+                            <mainClass>ch.niceideas.bigdata.html.screenshotgen.ScreenshotGenerator</mainClass>
+                            <classpathScope>test</classpathScope>
+                            <arguments>
+                                <argument>
+                                    http://${env.ESKIMO_NODE}/index.html
+                                </argument>
+                                <argument>
+                                    ${project.build.directory}/screenshots
+                                </argument>
+                                <argument>
+                                    ${env.NODE_OVERRIDE}
+                                </argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <!-- Set the JS coverage run flag -->
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>setFlag</id>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <target>
+                                        <touch file="${project.build.directory}/jsCoverageFlag"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Generate LCOV file from coverage reports -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>computeLcov</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <includeProjectDependencies>true</includeProjectDependencies>
+                                    <mainClass>ch.niceideas.bigdata.utils.GenerateLCOV</mainClass>
+                                    <classpathScope>test</classpathScope>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- sonar analysis -->
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.8</version>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>doc</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>2.2.2</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-pdf</artifactId>
+                                <version>2.3.4</version>
+                            </dependency>
+                            <!-- Comment this section to use the default jruby artifact provided by the plugin -->
+                            <!--<dependency>
+                                <groupId>org.jruby</groupId>
+                                <artifactId>jruby-complete</artifactId>
+                                <version>9.3.8.0</version>
+                            </dependency>
+                            -->
+                            <!-- Comment this section to use the default AsciidoctorJ artifact provided by the plugin -->
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj</artifactId>
+                                <version>2.5.7</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-diagram</artifactId>
+                                <version>2.2.4</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+
+                            <requires>
+                                <require>asciidoctor-diagram</require>
+                            </requires>
+
+                            <!-- Attributes common to all output formats -->
+                            <attributes>
+                                <sourcedir>${project.build.sourceDirectory}</sourcedir>
+                                <imagesoutdir>pngs</imagesoutdir>
+                                <toclevels>4</toclevels>
+                            </attributes>
+                        </configuration>
+                        <executions>
+
+                            <execution>
+                                <id>service-dev-guide-pdf</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDocumentName>service-dev-guide.adoc</sourceDocumentName>
+                                    <sourceDirectory>doc/guides/service-dev-guide</sourceDirectory>
+                                    <backend>pdf</backend>
+                                    <doctype>book</doctype>
+                                    <preserveDirectories>true</preserveDirectories>
+                                    <attributes>
+                                        <source-highlighter>rouge</source-highlighter>
+                                        <imagesdir>.</imagesdir>
+                                        <pdf-stylesdir>${project.basedir}/doc/theme</pdf-stylesdir>
+                                        <pdf-style>eskimo</pdf-style>
+                                        <pdf-themesdir>${project.basedir}/doc/theme</pdf-themesdir>
+                                        <pdf-theme>eskimo</pdf-theme>
+                                        <pdf-fontsdir>${project.basedir}/doc/fonts</pdf-fontsdir>
+                                        <icons>font</icons>
+                                        <sectnums>true</sectnums>
+                                        <pagenums/>
+                                        <toc/>
+                                        <idprefix/>
+                                        <idseparator>-</idseparator>
+                                        <project-version>${project.version}</project-version>
+                                    </attributes>
+                                    <skip>false</skip>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>eskimo-guide-pdf</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDocumentName>eskimo-guide.adoc</sourceDocumentName>
+                                    <sourceDirectory>doc/guides/eskimo-guide</sourceDirectory>
+                                    <backend>pdf</backend>
+                                    <doctype>book</doctype>
+                                    <preserveDirectories>true</preserveDirectories>
+                                    <attributes>
+                                        <source-highlighter>rouge</source-highlighter>
+                                        <imagesdir>.</imagesdir>
+                                        <pdf-stylesdir>${project.basedir}/doc/theme</pdf-stylesdir>
+                                        <pdf-style>eskimo</pdf-style>
+                                        <pdf-themesdir>${project.basedir}/doc/theme</pdf-themesdir>
+                                        <pdf-theme>eskimo</pdf-theme>
+                                        <pdf-fontsdir>${project.basedir}/doc/fonts</pdf-fontsdir>
+                                        <icons>font</icons>
+                                        <sectnums>true</sectnums>
+                                        <pagenums/>
+                                        <toc/>
+                                        <idprefix/>
+                                        <idseparator>-</idseparator>
+                                        <project-version>${project.version}</project-version>
+                                    </attributes>
+                                    <skip>false</skip>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>eskimo-guide-html</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>html5</backend>
+                                    <sourceDocumentName>eskimo-guide.adoc</sourceDocumentName>
+                                    <sourceDirectory>doc/guides/eskimo-guide</sourceDirectory>
+                                    <attributes>
+                                        <source-highlighter>rouge</source-highlighter>
+                                        <imagesdir>.</imagesdir>
+                                        <stylesheet>../../theme/eskimo.css</stylesheet>
+                                        <sectnums>true</sectnums>
+                                        <toc>left</toc>
+                                        <icons>font</icons>
+                                        <sectanchors>true</sectanchors>
+                                        <!-- set the idprefix to blank -->
+                                        <idprefix/>
+                                        <idseparator>-</idseparator>
+                                        <docinfo1>true</docinfo1>
+                                        <project-version>${project.version}</project-version>
+                                    </attributes>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>service-dev-guide-html</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>html5</backend>
+                                    <sourceDocumentName>service-dev-guide.adoc</sourceDocumentName>
+                                    <sourceDirectory>doc/guides/service-dev-guide</sourceDirectory>
+                                    <attributes>
+                                        <source-highlighter>rouge</source-highlighter>
+                                        <imagesdir>.</imagesdir>
+                                        <stylesheet>../../theme/eskimo.css</stylesheet>
+                                        <sectnums>true</sectnums>
+                                        <toc>left</toc>
+                                        <icons>font</icons>
+                                        <sectanchors>true</sectanchors>
+                                        <!-- set the idprefix to blank -->
+                                        <idprefix/>
+                                        <idseparator>-</idseparator>
+                                        <docinfo1>true</docinfo1>
+                                        <project-version>${project.version}</project-version>
+                                    </attributes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>3.3.2</version>
+                        <configuration>
+                            <webResources>
+                                <resource>
+                                    <directory>${project.build.directory}/generated-docs</directory>
+                                    <targetPath>docs</targetPath>
+                                    <excludes>
+                                        <exclude>*.pdf</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>${project.basedir}/doc/fonts</directory>
+                                    <targetPath>docs/fonts</targetPath>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

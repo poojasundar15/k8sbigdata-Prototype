@@ -1,0 +1,93 @@
+<html>
+<head>
+    <title>Generic Test Page</title>
+</head>
+<body>
+<div id="hoeapp-wrapper" class="hoe-hide-lpanel" hoe-device-type="desktop">
+    <script>
+
+        function loadScript(target) {
+            console.log("loading script : " + target);
+            var s = document.createElement("script");
+            s.type = "text/javascript";
+            s.src = target;
+            document.head.appendChild(s);
+        }
+
+    </script>
+
+    <div id="notification-placeholder">
+
+    </div>
+
+    <div id="left-menu-placeholder">
+
+    </div>
+
+    <div class="eskimo-version" id="eskimo-version">
+        (version)
+    </div>
+
+    <div class="content-page" id="content-page">
+
+    <section id="main-content">
+
+        <!-- eskimoNodeStatus.html -->
+        <div class="inner-content" id="inner-content-status"></div>
+
+        <!-- eskimoConsoles.html -->
+        <div class="inner-content" id="inner-content-consoles"></div>
+
+        <!-- eskimoOperations.html -->
+        <div class="inner-content" id="inner-content-operations"></div>
+
+        <!-- eskimoSetup.html -->
+        <div class="inner-content" id="inner-content-setup" style="visibility: hidden; display: none;"></div>
+
+        <!-- eskimoServicesSettings.html -->
+        <div class="inner-content" id="inner-content-services-settings"
+             style="visibility: hidden; display: none;"></div>
+
+        <!-- eskimoKubernetesServicesConfig.html -->
+        <div class="inner-content" id="inner-content-kubernetes-services-config"
+             style="visibility: hidden; display: none;"></div>
+
+        <!-- eskimoNodesConfig.html -->
+        <div class="inner-content" id="inner-content-nodes-config" style="visibility: hidden; display: none;"></div>
+
+        <!-- eskimoFileManagers.html -->
+        <div class="inner-content" id="inner-content-file-managers" style="visibility: hidden; display: none;"></div>
+
+    </section>
+
+        <!-- modal dialog for services selection -->
+        <div id="services-selection-modal-wrapper"></div>
+
+        <!-- modal dialog for services selection -->
+        <div id="kubernetes-services-selection-modal-wrapper"></div>
+
+        <!-- modal dialog for operation confirmation -->
+        <div id="operations-command-modal-wrapper"></div>
+
+        <!-- modal dialog for kubernetes operation confirmation -->
+        <div id="kubernetes-operations-command-modal-wrapper"></div>
+
+        <!-- modal dialog for settings operation confirmation -->
+        <div id="settings-operations-command-modal-wrapper"></div>
+
+        <!-- modal dialog for setup confirmation -->
+        <div id="setup-command-modal-wrapper"></div>
+
+        <!-- modal dialog for about box -->
+        <div id="about-modal-wrapper"></div>
+
+        <!-- modal dialog for edit user -->
+        <div id="edit-user-modal-wrapper"></div>
+
+        <!-- modal dialog for alert -->
+        <div id="alert-modal-wrapper"></div>
+
+    </div>
+</div>
+</body>
+</html>

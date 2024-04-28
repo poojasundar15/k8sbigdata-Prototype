@@ -1,0 +1,157 @@
+# This file is part of the eskimo project referenced at www.eskimo.sh. The licensing information below apply just as
+# well to this individual file than to the Eskimo Project as a whole.
+#
+# Copyright 2019 - 2023 eskimo.sh / https://www.eskimo.sh - All rights reserved.
+# Author : eskimo.sh / https://www.eskimo.sh
+#
+# Eskimo is available under a dual licensing model : commercial and GNU AGPL.
+# If you did not acquire a commercial licence for Eskimo, you can still use it and consider it free software under the
+# terms of the GNU Affero Public License. You can redistribute it and/or modify it under the terms of the GNU Affero
+# Public License  as published by the Free Software Foundation, either version 3 of the License, or (at your option)
+# any later version.
+# Compliance to each and every aspect of the GNU Affero Public License is mandatory for users who did no acquire a
+# commercial license.
+#
+# Eskimo is distributed as a free software under GNU AGPL in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# Affero Public License for more details.
+#
+# You should have received a copy of the GNU Affero Public License along with Eskimo. If not,
+# see <https://www.gnu.org/licenses/> or write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+# Boston, MA, 02110-1301 USA.
+#
+# You can be released from the requirements of the license by purchasing a commercial license. Buying such a
+# commercial license is mandatory as soon as :
+# - you develop activities involving Eskimo without disclosing the source code of your own product, software,
+#   platform, use cases or scripts.
+# - you deploy eskimo as part of a commercial product, platform or software.
+# For more information, please contact eskimo.sh at https://www.eskimo.sh
+#
+# The above copyright notice and this licensing notice shall be included in all copies or substantial portions of the
+# Software.
+
+
+#see https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc
+font:
+  catalog:
+    Raleway:
+      normal: Raleway-Regular.ttf
+      bold: Raleway-Bold.ttf
+      italic: Raleway-Italic.ttf
+      bold_italic: Raleway-BoldItalic.ttf
+  fallbacks:
+    [Raleway]
+
+base:
+  font-family: Raleway
+  font-color: #333333
+  font-size: 11
+  line-height-length: 14
+  line-height: $base-line-height-length / $base-font-size
+
+prose:
+  margin-bottom: 4
+
+code:
+  font-size: 9
+  padding: [3, 0, 5, 0]
+
+codespan:
+  font-family: Courier
+
+vertical-rhythm: $base-line-height-length
+
+heading:
+  font-color: #698fa4
+  h1:
+    font-size: 17
+  h2:
+    font-size: 15
+  h3:
+    font-size: 14
+  font-style: bold
+  line-height: 1.2
+  margin-top: $vertical-rhythm
+  margin-bottom: 3
+
+title-page:
+  align: center
+  logo:
+      top: 0%
+  title:
+    top: 55%
+    font-size: $heading-h1-font-size
+    font-style: bold
+    font-color: 698fa4
+    line-height: 0.9
+  subtitle:
+    font-size: $heading-h3-font-size
+    font-style: bold
+    line-height: 1
+  authors:
+    margin-top: $base-font-size * 1.25
+    font-size: $base-font-size * 1.5
+    font-color: 181818
+  revision:
+    margin-top: $base-font-size * 1.25
+
+page:
+  layout: portrait
+  margin: [0.5in, 0.75in, 0.5in, 0.75in]
+  size: A4
+
+link:
+  font-color: #009900
+
+list:
+  item-spacing: 3
+
+ulist:
+  marker:
+    circle:
+      content: "-"
+    disc:
+      content: "o"
+    square:
+      content: ")"
+
+# Doesn't wotk any better
+#ulist:
+#  marker:
+#    font-family: fas
+
+outline-list:
+  indent: $base-font-size * 1.5
+
+header:
+  height: 0.75in
+  line-height: 1
+  recto-content:
+    center: '{document-title}'
+  verso-content:
+    center: '{document-title}'
+     #image-vertical-align: <alignment> or <number>
+      # additional attributes for content:
+      # * {page-count}
+      # * {page-number}
+      # * {document-title}
+      # * {document-subtitle}
+      # * {chapter-title}
+      # * {section-title}
+      # * {section-or-chapter-title}
+
+footer:
+  height: 0.75in
+  line-height: 1
+  recto-content:
+    right: '{chapter-title} | *{page-number}*'
+  verso-content:
+    left: '*{page-number}* | {chapter-title}'
+
+image:
+  align: center
+
+caption:
+  align: center
+  font-color: #FF0000
+  font-size: 10

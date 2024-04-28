@@ -1,0 +1,112 @@
+{
+  "result": "OK",
+  "messages": {
+    "restart_cluster-slave_192-168-10-13": {
+      "lines": "LS0+IERvbmUgOiBFeGVjdXRpbmcgcmVzdGFydCBvZiBjbHVzdGVyLXNsYXZlIG9uIDE5Mi4xNjguMTAuMTMKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQotLT4gQ29tcGxldGVkIFN1Y2Nlc3NmdWxseS4K",
+      "lastLine": 3
+    },
+    "installation_calculator-runtime_192-168-10-13": {
+      "lines": "LS0+IERvbmUgOiBFeGVjdXRpbmcgaW5zdGFsbGF0aW9uIG9mIGNhbGN1bGF0b3ItcnVudGltZSBvbiAxOTIuMTY4LjEwLjEzCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLS0+IENvbXBsZXRlZCBTdWNjZXNzZnVsbHkuCg==",
+      "lastLine": 3
+    },
+    "Check--Install_Base-System_192-168-10-13": {
+      "lines": "Q2hlY2tpbmcgLyBJbnN0YWxsaW5nIEJhc2Ugc3lzdGVtCkluc3RhbGxpbmcgVG9wb2xvZ3kgYW5kIHNldHRpbmdzCkNoZWNraW5nIC8gSW5zdGFsbGluZyBLdWJlcm5ldGVzCi0tPiBEb25lIDogRXhlY3V0aW5nIENoZWNrIC8gSW5zdGFsbCBvZiBCYXNlIFN5c3RlbSBvbiAxOTIuMTY4LjEwLjEzCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLS0+IENvbXBsZXRlZCBTdWNjZXNzZnVsbHkuCg==",
+      "lastLine": 6
+    },
+    "restart_cluster-slave_192-168-10-15": {
+      "lines": "LS0+IERvbmUgOiBFeGVjdXRpbmcgcmVzdGFydCBvZiBjbHVzdGVyLXNsYXZlIG9uIDE5Mi4xNjguMTAuMTUKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQotLT4gQ29tcGxldGVkIFN1Y2Nlc3NmdWxseS4K",
+      "lastLine": 3
+    },
+    "installation_user-console_192-168-10-15": {
+      "lines": "LS0+IERvbmUgOiBFeGVjdXRpbmcgaW5zdGFsbGF0aW9uIG9mIHVzZXItY29uc29sZSBvbiAxOTIuMTY4LjEwLjE1Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLS0+IENvbXBsZXRlZCBTdWNjZXNzZnVsbHkuCg==",
+      "lastLine": 3
+    },
+    "Check--Install_Base-System_192-168-10-15": {
+      "lines": "Q2hlY2tpbmcgLyBJbnN0YWxsaW5nIEJhc2Ugc3lzdGVtCkluc3RhbGxpbmcgVG9wb2xvZ3kgYW5kIHNldHRpbmdzCkNoZWNraW5nIC8gSW5zdGFsbGluZyBLdWJlcm5ldGVzCi0tPiBEb25lIDogRXhlY3V0aW5nIENoZWNrIC8gSW5zdGFsbCBvZiBCYXNlIFN5c3RlbSBvbiAxOTIuMTY4LjEwLjE1Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLS0+IENvbXBsZXRlZCBTdWNjZXNzZnVsbHkuCg==",
+      "lastLine": 6
+    },
+    "installation_cluster-master_192-168-10-15": {
+      "lines": "LS0+IERvbmUgOiBFeGVjdXRpbmcgaW5zdGFsbGF0aW9uIG9mIGNsdXN0ZXItbWFzdGVyIG9uIDE5Mi4xNjguMTAuMTUKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQotLT4gQ29tcGxldGVkIFN1Y2Nlc3NmdWxseS4K",
+      "lastLine": 3
+    },
+    "uninstallation_cluster-master_192-168-10-13": {
+      "lines": "LS0+IERvbmUgOiBFeGVjdXRpbmcgdW5pbnN0YWxsYXRpb24gb2YgY2x1c3Rlci1tYXN0ZXIgb24gMTkyLjE2OC4xMC4xMwotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi0tPiBDb21wbGV0ZWQgU3VjY2Vzc2Z1bGx5Lgo=",
+      "lastLine": 3
+    },
+    "installation_database_192-168-10-15": {
+      "lines": "LS0+IERvbmUgOiBFeGVjdXRpbmcgaW5zdGFsbGF0aW9uIG9mIGRhdGFiYXNlIG9uIDE5Mi4xNjguMTAuMTUKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQotLT4gQ29tcGxldGVkIFN1Y2Nlc3NmdWxseS4K",
+      "lastLine": 3
+    },
+    "installation_database_192-168-10-13": {
+      "lines": "LS0+IERvbmUgOiBFeGVjdXRpbmcgaW5zdGFsbGF0aW9uIG9mIGRhdGFiYXNlIG9uIDE5Mi4xNjguMTAuMTMKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQotLT4gQ29tcGxldGVkIFN1Y2Nlc3NmdWxseS4K",
+      "lastLine": 3
+    },
+    "installation_calculator-runtime_192-168-10-15": {
+      "lines": "LS0+IERvbmUgOiBFeGVjdXRpbmcgaW5zdGFsbGF0aW9uIG9mIGNhbGN1bGF0b3ItcnVudGltZSBvbiAxOTIuMTY4LjEwLjE1Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KLS0+IENvbXBsZXRlZCBTdWNjZXNzZnVsbHkuCg==",
+      "lastLine": 3
+    }
+  },
+  "globalMessages": {
+    "lines": "",
+    "lastLine": 0
+  },
+  "labels": [
+    {
+      "operation": "Check--Install_Base-System_192-168-10-13",
+      "label": "Executing Check / Install of Base System on 192.168.10.13"
+    },
+    {
+      "operation": "Check--Install_Base-System_192-168-10-15",
+      "label": "Executing Check / Install of Base System on 192.168.10.15"
+    },
+    {
+      "operation": "installation_cluster-master_192-168-10-15",
+      "label": "Executing installation of cluster-master on 192.168.10.15"
+    },
+    {
+      "operation": "uninstallation_cluster-master_192-168-10-13",
+      "label": "Executing uninstallation of cluster-master on 192.168.10.13"
+    },
+    {
+      "operation": "restart_cluster-slave_192-168-10-15",
+      "label": "Executing restart of cluster-slave on 192.168.10.15"
+    },
+    {
+      "operation": "restart_cluster-slave_192-168-10-13",
+      "label": "Executing restart of cluster-slave on 192.168.10.13"
+    },
+    {
+      "operation": "installation_calculator-runtime_192-168-10-15",
+      "label": "Executing installation of calculator-runtime on 192.168.10.15"
+    },
+    {
+      "operation": "installation_calculator-runtime_192-168-10-13",
+      "label": "Executing installation of calculator-runtime on 192.168.10.13"
+    },
+    {
+      "operation": "installation_database_192-168-10-15",
+      "label": "Executing installation of database on 192.168.10.15"
+    },
+    {
+      "operation": "installation_database_192-168-10-13",
+      "label": "Executing installation of database on 192.168.10.13"
+    },
+    {
+      "operation": "installation_user-console_192-168-10-15",
+      "label": "Executing installation of user-console on 192.168.10.15"
+    }
+  ],
+  "status": {
+    "restart_cluster-slave_192-168-10-13": "COMPLETE",
+    "installation_calculator-runtime_192-168-10-13": "COMPLETE",
+    "Check--Install_Base-System_192-168-10-13": "COMPLETE",
+    "restart_cluster-slave_192-168-10-15": "COMPLETE",
+    "installation_user-console_192-168-10-15": "COMPLETE",
+    "Check--Install_Base-System_192-168-10-15": "COMPLETE",
+    "installation_cluster-master_192-168-10-15": "COMPLETE",
+    "uninstallation_cluster-master_192-168-10-13": "COMPLETE",
+    "installation_database_192-168-10-15": "COMPLETE",
+    "installation_database_192-168-10-13": "COMPLETE",
+    "installation_calculator-runtime_192-168-10-15": "COMPLETE"
+  }
+}

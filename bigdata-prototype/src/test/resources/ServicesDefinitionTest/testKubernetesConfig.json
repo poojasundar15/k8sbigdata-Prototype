@@ -1,0 +1,8 @@
+{
+  "database-manager_install": "on",
+  "user-console_install": "on",
+  "broker-manager_install": "on",
+  "broker_install": "on",
+  "calculator-runtime_install": "on",
+  "database_install": "on"
+}

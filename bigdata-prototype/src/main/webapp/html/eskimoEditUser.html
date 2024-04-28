@@ -1,0 +1,68 @@
+
+
+<div id="edit-user-modal" class="modal fade" role="dialog">
+    <div id="edit-user-modal-dialog" class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="edit-user-title">Edit User Information </h4>
+                <button type="button" class="btn-close" id="edit-user-header-close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div id="edit-user-overlay" class="loading-overlay" style="display:none;">
+                    <div class="spinner"></div>
+                </div>
+
+                <div class="col-md-12 col-sd-12">
+
+                    <form id="edit-user-form">
+
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <label class="col-md-4 align-self-center control-label" id="label_user_id">User ID</label>
+                            <div class="col-md-7">
+                                <input id="edit-user-user-id" name="edit-user-user-id" type="text"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <label class="col-md-4 align-self-center control-label" id="label_cur_password">Current Password</label>
+                            <div class="col-md-7">
+                                <input id="edit-user-current-password" name="edit-user-current-password" type="password"
+                                       class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <label class="col-md-4 align-self-center control-label" id="label_new_password">New Password</label>
+                            <div class="col-md-7">
+                                <input id="edit-user-new-password" name="edit-user-new-password" type="password"
+                                       class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <label class="col-md-4 align-self-center control-label" id="label_repeaat_password">Repeat Password</label>
+                            <div class="col-md-7">
+                                <input id="edit-user-repeat-password" name="edit-user-repeat-password" type="password"
+                                       class="form-control">
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="edit-user-input-button-cancel">Cancel</button>
+                <button type="button" class="btn btn-info" id="edit-user-input-button-validate">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

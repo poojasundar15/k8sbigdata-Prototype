@@ -1,0 +1,11 @@
+cookies
+.vagrant
+*results
+eskimo-call-result
+eskimo-zeppelin-admin_call
+eskimo-zeppelin-call-error
+kibana-flight-import
+kibana-flight-import-error
+kibana-logs-import
+kibana-logs-import-error
+*.log

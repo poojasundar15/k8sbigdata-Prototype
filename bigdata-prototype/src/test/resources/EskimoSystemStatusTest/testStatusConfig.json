@@ -1,0 +1,287 @@
+{
+  "marathon": {
+    "name": "Marathon",
+    "unique": true,
+    "commands": [
+      {
+        "name": "Show Logs",
+        "icon": "fa-file",
+        "id": "show_log"
+      },
+      {
+        "name": "Show Registry Logs",
+        "icon": "fa-file",
+        "id": "show_registry_log"
+      }
+    ],
+    "group": "Mesos"
+  },
+  "mesos-master": {
+    "name": "Master",
+    "unique": true,
+    "commands": [
+      {
+        "name": "Show INFO Logs",
+        "icon": "fa-file",
+        "id": "show_info_log"
+      },
+      {
+        "name": "Show WARN Logs",
+        "icon": "fa-file",
+        "id": "show_warn_log"
+      },
+      {
+        "name": "Show ERROR Logs",
+        "icon": "fa-file",
+        "id": "show_error_log"
+      }
+    ],
+    "group": "Mesos"
+  },
+  "zookeeper": {
+    "name": "Zookeeper",
+    "unique": true,
+    "commands": [
+      {
+        "name": "Show Logs",
+        "icon": "fa-file",
+        "id": "show_log"
+      }
+    ],
+    "group": ""
+  },
+  "flink-runtime": {
+    "name": "Runtime",
+    "unique": false,
+    "commands": [],
+    "group": "Flink"
+  },
+  "zeppelin": {
+    "name": "Zeppelin",
+    "unique": true,
+    "commands": [
+      {
+        "name": "Show Logs",
+        "icon": "fa-file",
+        "id": "show_log"
+      },
+      {
+        "name": "Show Shell Int. Logs",
+        "icon": "fa-file",
+        "id": "show_shell_log"
+      },
+      {
+        "name": "Show Python Int. Logs",
+        "icon": "fa-file",
+        "id": "show_python_log"
+      },
+      {
+        "name": "Show Spark Int. Logs",
+        "icon": "fa-file",
+        "id": "show_spark_log"
+      },
+      {
+        "name": "Show Flink Int. Logs",
+        "icon": "fa-file",
+        "id": "show_flink_log"
+      }
+    ],
+    "group": ""
+  },
+  "ntp": {
+    "name": "NTP",
+    "unique": false,
+    "commands": [
+      {
+        "name": "Show Logs",
+        "icon": "fa-file",
+        "id": "show_log"
+      }
+    ],
+    "group": ""
+  },
+  "gluster": {
+    "name": "FS",
+    "unique": false,
+    "commands": [
+      {
+        "name": "Show GlusterFS Logs",
+        "icon": "fa-file",
+        "id": "show_log"
+      },
+      {
+        "name": "Show Remote Server Logs",
+        "icon": "fa-file",
+        "id": "show_remote_log"
+      }
+    ],
+    "group": "Gluster"
+  },
+  "flink-app-master": {
+    "name": "App Master",
+    "unique": true,
+    "commands": [
+      {
+        "name": "Show Logs",
+        "icon": "fa-file",
+        "id": "show_log"
+      }
+    ],
+    "group": "Flink"
+  },
+  "mesos-agent": {
+    "name": "Agent",
+    "unique": false,
+    "commands": [
+      {
+        "name": "Show INFO Logs",
+        "icon": "fa-file",
+        "id": "show_info_log"
+      },
+      {
+        "name": "Show WARN Logs",
+        "icon": "fa-file",
+        "id": "show_warn_log"
+      },
+      {
+        "name": "Show ERROR Logs",
+        "icon": "fa-file",
+        "id": "show_error_log"
+      }
+    ],
+    "group": "Mesos"
+  },
+  "logstash": {
+    "name": "Logstash",
+    "unique": false,
+    "commands": [
+      {
+        "name": "Show Remote Server Logs",
+        "icon": "fa-file",
+        "id": "show_remote_log"
+      }
+    ],
+    "group": "Elastic Stack"
+  },
+  "cerebro": {
+    "name": "Cerebro",
+    "unique": true,
+    "commands": [],
+    "group": "Elastic Stack"
+  },
+  "elasticsearch": {
+    "name": "Elastic-Search",
+    "unique": false,
+    "commands": [
+      {
+        "name": "Show Logs",
+        "icon": "fa-file",
+        "id": "show_log"
+      },
+      {
+        "name": "Show Search Slow Logs",
+        "icon": "fa-file",
+        "id": "show_search_slow_log"
+      },
+      {
+        "name": "Show Indexing Slow Logs",
+        "icon": "fa-file",
+        "id": "show_index_slow_log"
+      },
+      {
+        "name": "Show GC Logs",
+        "icon": "fa-file",
+        "id": "show_gc_log"
+      }
+    ],
+    "group": "Elastic Stack"
+  },
+  "grafana": {
+    "name": "Grafana",
+    "unique": true,
+    "commands": [],
+    "group": "Monitoring"
+  },
+  "kafka-manager": {
+    "name": "Manager",
+    "unique": true,
+    "commands": [
+      {
+        "name": "Show Logs",
+        "icon": "fa-file",
+        "id": "show_log"
+      }
+    ],
+    "group": "Kafka"
+  },
+  "kafka": {
+    "name": "Broker",
+    "unique": false,
+    "commands": [
+      {
+        "name": "Show Server Logs",
+        "icon": "fa-file",
+        "id": "show_server_log"
+      },
+      {
+        "name": "Show Controller Logs",
+        "icon": "fa-file",
+        "id": "show_controller_log"
+      },
+      {
+        "name": "Show State Change Logs",
+        "icon": "fa-file",
+        "id": "show_state_change_log"
+      }
+    ],
+    "group": "Kafka"
+  },
+  "spark-runtime": {
+    "name": "Executor",
+    "unique": false,
+    "commands": [
+      {
+        "name": "Show Mesos Shuffle Logs",
+        "icon": "fa-file",
+        "id": "show_shuffle_log"
+      }
+    ],
+    "group": "Spark"
+  },
+  "prometheus": {
+    "name": "Prometheus",
+    "unique": false,
+    "commands": [
+      {
+        "name": "Show Logs",
+        "icon": "fa-file",
+        "id": "show_log"
+      }
+    ],
+    "group": "Monitoring"
+  },
+  "kibana": {
+    "name": "Kibana",
+    "unique": true,
+    "commands": [
+      {
+        "name": "Show Logs",
+        "icon": "fa-file",
+        "id": "show_log"
+      }
+    ],
+    "group": "Elastic Stack"
+  },
+  "spark-console": {
+    "name": "Console",
+    "unique": true,
+    "commands": [
+      {
+        "name": "Show Logs",
+        "icon": "fa-file",
+        "id": "show_log"
+      }
+    ],
+    "group": "Spark"
+  }
+}

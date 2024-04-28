@@ -1,0 +1,74 @@
+
+<div id="info-operations-wrapper"
+     class="panel theme-panel inner-content-inner inner-content-operations">
+
+    <div id="operations-panel" style="position: relative;">
+
+        <div class="col-xs-12">
+            <div class="col-md-12" id="operations-title">
+                <h3>Operations Monitoring</h3>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-12">
+            <div class="col-xs-6 col-sm-5  col-md-4 col-lg-3 btn-toolbar operations-toolbar btn-toolbar operations-toolbar">
+                <div class="btn-group">
+                    <button id="interrupt-operations-btn" name="interrupt-operations-btn"
+                            class="btn btn-danger disabled">
+                        Interrupt Processing
+                    </button>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-7  col-md-8 col-lg-9 ">
+                <div id="operations-global-messages" class="alert alert-danger bg-danger text-white border-0 operations-global-messages" style="display: none;">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-12 operations-outer">
+            <div class="col-xs-12 col-md-12 operations-inner text-center">
+                <div class="table-responsive operations-table col-lg-offset-2 col-lg-8 offset-md-1 col-md-10 col-sm-12">
+                    <table id="operations-op-table" class="table table-bordered table-hover">
+                        <thead id="operations-table-head">
+                            <tr id="operations-header" class="operations-table-header table-light">
+                                <td class="operations-cell">Operation</td>
+                                <td class="operations-cell">Progress</td>
+                                <td id="operations-head-log" class="operations-cell">Logs</td>
+                            </tr>
+                        </thead>
+                        <tbody id="operations-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Modal for services reinstallation -->
+<div id="operation-log-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="operation-log-dialog" class="modal-dialog modal-dialog-centered modal-full-width operations-log-modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content operations-log-modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Cluster Operation Logs</h4>
+                <button type="button" class="btn-close"  id="operation-log-cancel"></button>
+            </div>
+            <div id="operation-log-body" class="modal-body operation-log-body">
+
+                <div class="col-md-12 log-message" id="log-message">
+                    <pre id="log-message-content" tabindex="1" class="log-message-content">(Here are displayed messages from Eskimo backend)</pre>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="operation-log-button-cancel">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

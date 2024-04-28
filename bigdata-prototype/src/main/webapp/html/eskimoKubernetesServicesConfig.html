@@ -1,0 +1,68 @@
+
+<div id="kubernetes-servicesmanagement"
+     class="panel theme-panel inner-content-inner ">
+
+    <form id="kubernetes-servicesconfig">
+
+        <div id="nodeContainer-nodes">
+
+            <div class="col-xs-12 col-md-12">
+                <h3>Kubernetes Services configuration</h3>
+
+                <div id="kubernetes-servicesplaceholder" class="col-md-12 col-xs-12">
+
+                    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-lg-offset-2 offset-md-1"
+                         id="kubernetes-services-container-table">
+                        <div class="table-responsive">
+                            <table id="kubernetes-services-table" class="table table-bordered table-hover">
+                                <thead id="kubernetes-services-table-head" class="table-light">
+                                <tr>
+                                    <td></td>
+                                    <td>Service</td>
+                                    <td>Enabled on K8s</td>
+                                    <td>CPU Request</td>
+                                    <td>RAM Request</td>
+                                    <td>Cluster Wide</td>
+                                    <td style="min-width: 90px;">Replicas</td>
+                                </tr>
+                                </thead>
+                                <tbody id="kubernetes-services-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12 col-xs-12 btn-toolbar" id="save-nodes">
+                        <div class="btn-group">
+                            <button id="save-kubernetes-servicesbtn" name="save-kubernetes-servicesbtn"
+                                    class="btn btn-info ms-2">
+                                Apply Configuration
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button id="reinstall-kubernetes-servicesbtn" name="reinstall-kubernetes-servicesbtn"
+                                    class="btn btn-info ms-2">
+                                Force Reinstall
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button id="select-all-kubernetes-servicesconfig" name="select-all-kubernetes-servicesconfig"
+                                    class="btn btn-secondary ms-2">
+                                (Un-)Select All
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button id="reset-kubernetes-servicesconfig" name="reset-kubernetes-servicesconfig"
+                                    class="btn btn-secondary ms-2">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>

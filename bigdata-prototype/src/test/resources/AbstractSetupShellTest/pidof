@@ -1,0 +1,5 @@
+#/bin/bash
+
+echo "$@" >> .log_pidof
+
+echo 9

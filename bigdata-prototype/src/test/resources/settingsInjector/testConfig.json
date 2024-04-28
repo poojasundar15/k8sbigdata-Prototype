@@ -1,0 +1,391 @@
+{
+  "settings": [
+    {
+      "settings": [],
+      "name": "mesos-master"
+    },
+    {
+      "settings": [],
+      "name": "zookeeper"
+    },
+    {
+      "settings": [],
+      "name": "zeppelin"
+    },
+    {
+      "settings": [],
+      "name": "ntp"
+    },
+    {
+      "settings": [
+        {
+          "filename": "egmi.properties",
+          "service": "gluster",
+          "filesystemService": "egmi",
+          "propertyType": "VARIABLE",
+          "propertyFormat": "{name}={value}",
+          "commentPrefix": "#",
+          "properties": [
+            {
+              "name": "target.volumes",
+              "comment": "The volumes to be automagically managed by EGMI.",
+              "defaultValue": "",
+              "value": "spark_eventlog,spark_data,flink_data,kafka_data,flink_completed_jobs,logstash_data,kubernetes_registry,kubernetes_shared"
+            },
+            {
+              "name": "target.volumes.performance.off",
+              "comment": "Volumes for which the performance settings needs to be turned off.",
+              "defaultValue": "",
+              "value": "kafka_data"
+            },
+            {
+              "name": "config.performance.off",
+              "comment": "Performance settings to turn off for volumes defined in 'target.volumes.performance.off'",
+              "defaultValue": "",
+              "value": "performance.quick-read,performance.io-cache,performance.write-behind,performance.stat-prefetch,performance.read-ahead,performance.readdir-ahead,performance.open-behind"
+            },
+            {
+              "name": "system.statusUpdatePeriodSeconds",
+              "comment": "The orchestration loop delay in seconds. EGMI runs its checks and updates its status every X seconds.",
+              "validationRegex": "^[0-9\\.]+$",
+              "defaultValue": "30",
+              "value": "20"
+            },
+            {
+              "name": "target.numberOfBricks",
+              "comment": "Define the target minimum number of bricks we want for every volume. It can be a fixed number (like 1, 2, 5, etc.) or a strategy among [ALL_NODES, LOG_DISPATCH].",
+              "defaultValue": "LOG_DISPATCH",
+              "validationRegex": "^([0-9\\.]+)$|^(LOG_DISPATCH)$|^(ALL_NODES)$",
+              "value": ""
+            },
+            {
+              "name": "target.defaultNumberReplica",
+              "comment": "The ideal number of replicas to try to respect.",
+              "defaultValue": "3",
+              "validationRegex": "^[0-9\\.]+$|",
+              "value": ""
+            },
+            {
+              "name": "zookeeper.urls",
+              "comment": "The URL:PORT used to connect to zookeeper (or set of URL:PORTs, coma separated). Use 'ZOOKEEPER_URL:2181' on Eskimo to have it injected automatically by eskimo topology system.",
+              "defaultValue": "",
+              "value": ""
+            },
+            {
+              "name": "target.predefined-ip-addresses",
+              "comment": "Preconfigured set of IP addresses where gluster is to be managed (coma separated).\nIf these are set here, they're used as a fixed pre-defined set of data nodes to manager.\n If none is defined here, zookeeper is used to track data nodes",
+              "defaultValue": "",
+              "value": "192.168.56.21,192.168.56.22,192.168.56.23,192.168.56.24"
+            },
+            {
+              "name": "master",
+              "comment": "Force these instances of EGMI being master not master (if EGMI master is running elsewhere), regardless of what happens in zookeeper. Use master=false",
+              "defaultValue": "",
+              "validationRegex": "^(true)$|^(false)$",
+              "value": "false"
+            }
+          ]
+        }
+      ],
+      "name": "gluster"
+    },
+    {
+      "settings": [],
+      "name": "mesos-agent"
+    },
+    {
+      "settings": [],
+      "name": "logstash"
+    },
+    {
+      "settings": [
+        {
+          "filename": "JVM_OPTS.sh",
+          "propertyType": "REGEX",
+          "propertyFormat": "{name}{value}",
+          "commentPrefix": "#",
+          "service": "cerebro2",
+          "filesystemService": "cerebro2",
+          "properties": [
+            {
+              "name": "Xms",
+              "comment": "Startup Heap Size for ES java process\n [ESKIMO_DEFAULT] means memory allocator will decide of ES memory share.",
+              "defaultValue": "[ESKIMO_DEFAULT]",
+              "value": "600m"
+            },
+            {
+              "name": "Xmx",
+              "comment": "Maximum Heap Size for ES java process\n [ESKIMO_DEFAULT] means memory allocator will decide of ES memory share.",
+              "defaultValue": "[ESKIMO_DEFAULT]",
+              "value": "600m"
+            }
+          ]
+        }
+      ],
+      "name": "cerebro2"
+    },
+    {
+      "settings": [
+        {
+          "filename": "eskimo.options",
+          "propertyType": "REGEX",
+          "propertyFormat": "{name}{value}",
+          "commentPrefix": "#",
+          "service": "cerebro",
+          "filesystemService": "cerebro",
+          "properties": [
+            {
+              "name": "Xms",
+              "comment": "Startup Heap Size for ES java process\n [ESKIMO_DEFAULT] means memory allocator will decide of ES memory share.",
+              "defaultValue": "[ESKIMO_DEFAULT]",
+              "value": "600m"
+            },
+            {
+              "name": "Xmx",
+              "comment": "Maximum Heap Size for ES java process\n [ESKIMO_DEFAULT] means memory allocator will decide of ES memory share.",
+              "defaultValue": "[ESKIMO_DEFAULT]",
+              "value": "600m"
+            }
+          ]
+        }
+      ],
+      "name": "cerebro"
+    },
+    {
+      "settings": [{
+        "filename": "elasticsearch.yml",
+        "propertyFormat": "{name}: {value}",
+        "commentPrefix": "#",
+        "service": "elasticsearch",
+        "filesystemService": "elasticsearch",
+        "propertyType": "VARIABLE",
+        "properties": [
+          {
+            "defaultValue": "false",
+            "name": "bootstrap.memory_lock",
+            "comment": "Lock the memory on startup",
+            "value": "true"
+          },
+          {
+            "defaultValue": "true",
+            "name": "action.destructive_requires_name",
+            "comment": "Require explicit names when deleting indices",
+            "value": "false"
+          }
+        ]
+      }],
+      "name": "elasticsearch"
+    },
+    {
+      "settings": [{
+        "filename": "defaults.ini",
+        "propertyFormat": "{name} = {value}",
+        "commentPrefix": "#",
+        "service": "grafana",
+        "filesystemService": "grafana",
+        "propertyType": "VARIABLE",
+        "properties": [
+          {
+            "defaultValue": "eskimo",
+            "name": "admin_user",
+            "comment": "Grafana admin user within eskimo",
+            "value": "test_eskimo"
+          },
+          {
+            "defaultValue": "eskimo",
+            "name": "admin_password",
+            "comment": "Grafana admin user password within eskimo",
+            "value": "test_password"
+          }
+        ]
+      }],
+      "name": "grafana"
+    },
+    {
+      "settings": [],
+      "name": "kafka-manager"
+    },
+    {
+      "settings": [
+        {
+          "filename": "eskimo-memory.opts",
+          "propertyType": "REGEX",
+          "propertyFormat": "{name}{value}",
+          "commentPrefix": "#",
+          "service": "kafka",
+          "filesystemService": "kafka",
+          "properties": [
+            {
+              "name": "Xms",
+              "comment": "Startup Heap Size for Kafka java process\n [ESKIMO_DEFAULT] means memory allocator will decide of ES memory share.",
+              "defaultValue": "[ESKIMO_DEFAULT]",
+              "value": "1234m"
+            },
+            {
+              "name": "Xmx",
+              "comment": "Maximum Heap Size for Kafka java process\n [ESKIMO_DEFAULT] means memory allocator will decide of ES memory share.",
+              "defaultValue": "[ESKIMO_DEFAULT]",
+              "value": "1234m"
+            }
+          ]
+        },
+        {
+          "filename": "server.properties",
+          "propertyFormat": "{name}={value}",
+          "commentPrefix": "#",
+          "service": "kafka",
+          "filesystemService": "kafka",
+          "propertyType": "VARIABLE",
+          "properties": [
+            {
+              "defaultValue": "3",
+              "name": "num.network.threads",
+              "comment": "The number of threads that the server uses for receiving requests from the network and sending responses to the network"
+            },
+            {
+              "defaultValue": "8",
+              "name": "num.io.threads",
+              "comment": "The number of threads that the server uses for processing requests, which may include disk I/O"
+            },
+            {
+              "defaultValue": "102400",
+              "name": "socket.send.buffer.bytes",
+              "comment": "The send buffer (SO_SNDBUF) used by the socket server"
+            },
+            {
+              "defaultValue": "102400",
+              "name": "socket.receive.buffer.bytes",
+              "comment": "The receive buffer (SO_RCVBUF) used by the socket server",
+              "value": "204800"
+            },
+            {
+              "defaultValue": "104857600",
+              "name": "socket.request.max.bytes",
+              "comment": "The maximum size of a request that the socket server will accept (protection against OOM)",
+              "value": "128857600"
+            },
+            {
+              "defaultValue": "1",
+              "name": "num.partitions",
+              "comment": "The default number of log partitions per topic. More partitions allow greater parallelism for consumption, but this will also result in more files across the brokers.",
+              "value": "3"
+            },
+            {
+              "defaultValue": "168",
+              "name": "log.retention.hours",
+              "comment": "The minimum age of a log file to be eligible for deletion due to age",
+              "value": "48"
+            }
+          ]
+        },
+        {
+          "filename": "test.properties",
+          "service": "kafka",
+          "filesystemService": "kafka",
+          "commentPrefix": "#",
+          "propertyType": "VARIABLE",
+          "propertyFormat": "{name}={value}",
+          "properties": [
+            {
+              "defaultValue": "3",
+              "name": "num.network.test",
+              "comment": "Just a test property"
+            }
+          ]
+        }],
+      "name": "kafka"
+    },
+    {
+      "settings": [{
+        "filename": "spark-defaults.conf",
+        "propertyFormat": "{name}={value}",
+        "commentPrefix": "#",
+        "service": "spark-runtime",
+        "filesystemService": "spark",
+        "propertyType": "VARIABLE",
+        "properties": [
+          {
+            "defaultValue": "800m",
+            "name": "spark.driver.memory",
+            "comment": "Limiting the driver (client) memory"
+          },
+          {
+            "defaultValue": "5",
+            "name": "spark.rpc.numRetries",
+            "comment": "Number of times to retry before an RPC task gives up. An RPC task will run at most times of this number."
+          },
+          {
+            "defaultValue": "5s",
+            "name": "spark.rpc.retry.wait",
+            "comment": "Duration for an RPC ask operation to wait before retrying."
+          },
+          {
+            "defaultValue": "FAIR",
+            "name": "spark.scheduler.mode",
+            "comment": "The scheduling mode between jobs submitted to the same SparkContext. \nCan be FIFO or FAIR. FAIR Seem not to work well with mesos"
+          },
+          {
+            "defaultValue": "20s",
+            "name": "spark.locality.wait",
+            "comment": "How long to wait to launch a data-local task before giving up and launching it on a less-local node.",
+            "value": "40s"
+          },
+          {
+            "defaultValue": "200s",
+            "name": "spark.dynamicAllocation.executorIdleTimeout",
+            "comment": "If dynamic allocation is enabled and an executor has been idle for more than this duration, the executor will be removed. \n (Caution here : small values cause issues. I have executors killed with 10s for instance)",
+            "value": "300s"
+          },
+          {
+            "defaultValue": "300s",
+            "name": "spark.dynamicAllocation.cachedExecutorIdleTimeout",
+            "comment": "If dynamic allocation is enabled and an executor which has cached data blocks has been idle for more than this duration, the executor will be removed. \n (Caution here : small values cause issues. I have executors killed with 10s for instance)"
+          },
+          {
+            "defaultValue": "[ESKIMO_DEFAULT]",
+            "name": "spark.executor.memory",
+            "comment": "Defining default Spark executor memory allowed by Eskimo Memory Management (found in topology). \nUSE [ESKIMO_DEFAULT] to leave untouched or e.g. 800m, 1.2g, etc.",
+            "value": "[ESKIMO_DEFAULT]"
+          },
+          {
+            "defaultValue": false,
+            "name": "spark.eskimo.isTest",
+            "comment": "Just a test config - unused by spark - for unit testing of settingsInjector.sh",
+            "value": true
+          }
+        ]
+      }],
+      "name": "spark-runtime"
+    },
+    {
+      "settings": [],
+      "name": "prometheus"
+    },
+    {
+      "settings": [
+        {
+          "filename": "node.options",
+          "propertyType": "REGEX",
+          "propertyFormat": "{name}={value}",
+          "commentPrefix": "#",
+          "service": "kibana",
+          "filesystemService": "kibana",
+          "properties": [
+            {
+              "name": "max-old-space-size",
+              "comment": "Maximum Old Space Size of the nodejs runtime for Kibana",
+              "defaultValue": "[ESKIMO_DEFAULT]",
+              "value": "1234"
+            }
+          ]
+        }
+      ],
+      "name": "kibana"
+    },
+    {
+      "settings": [],
+      "name": "spark-console"
+    }
+  ],
+  "status": "OK"
+}

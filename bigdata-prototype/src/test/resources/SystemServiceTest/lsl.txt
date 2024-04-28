@@ -1,0 +1,12 @@
+database-manager
+coredns
+database
+k8s.gcr.io
+broker
+broker-manager
+kubernetesui
+logstash
+spark
+spark-runtime
+calculator-runtime
+user-console

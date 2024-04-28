@@ -1,0 +1,15 @@
+{
+  "broker-manager_installed_on_IP_KUBERNETES_NODE": "OK",
+  "cluster-slave_installed_on_IP_192-168-10-13": "OK",
+  "cluster-slave_installed_on_IP_192-168-10-11": "OK",
+  "database_installed_on_IP_KUBERNETES_NODE": "OK",
+  "distributed-time_installed_on_IP_192-168-10-11": "OK",
+  "database-manager_installed_on_IP_KUBERNETES_NODE": "OK",
+  "cluster-manager_installed_on_IP_192-168-10-13": "OK",
+  "calculator-runtime_installed_on_IP_KUBERNETES_NODE": "OK",
+  "broker_installed_on_IP_KUBERNETES_NODE": "OK",
+  "distributed-time_installed_on_IP_192-168-10-13": "OK",
+  "distributed-filesystem_installed_on_IP_192-168-10-11": "OK",
+  "distributed-filesystem_installed_on_IP_192-168-10-13": "OK",
+  "cluster-master_installed_on_IP_192-168-10-11": "OK"
+}

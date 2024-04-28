@@ -1,0 +1,112 @@
+
+<div id="file-managers-management"
+     class="panel theme-panel inner-content-inner ">
+
+    <div class="col-xs-12">
+        <div class="col-md-12" id="file-managers-title">
+            <h3>Eskimo Cluster Nodes SFTP File Manager</h3>
+        </div>
+    </div>
+    <div class="col-xs-12 file-managers-header">
+        <div class="col-md-12" id="file-managers-action">
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Open SFTP File Manager <span class="caret"></span>
+                </button>
+                <ul id="file-managers-action-open-file-manager" class="dropdown-menu">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="col-md-12" id="file-managers-file-managers">
+
+            <ul id="file-managers-tab-list" class="nav nav-tabs"> </ul>
+        </div>
+    </div>
+
+    <div id="file-viewer-modal" class="modal fade" tabindex="-1" role="dialog">
+        <div id="file-viewer-modal-dialog" class="modal-dialog modal-dialog-centered modal-full-width file-viewer-modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content file-viewer-modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="file-viewer-title">Viewing File : </h4>
+                    <button type="button" class="btn-close" id="file-manager-viewer-header-close"></button>
+                </div>
+                <div id="file-viewer-body" class="modal-body file-viewer-body">
+                    <div class="col-md-12 file-content" id="file-content">
+                        <pre id="file-viewer-content" tabindex="1" class="file-viewer-content">(file content)</pre>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="file-manager-viewer-button-close">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="filename-input-modal" class="modal fade" role="dialog">
+        <div id="filename-input-modal-dialog" class="modal-dialog modal-dialog-centered">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="filename-input-title">Enter file name </h4>
+                    <button type="button" class="btn-close" id="file-manager-input-header-close"></button>
+                </div>
+                <div class="modal-body">
+                <div class="col-md-12 col-sd-12">
+                    <label class="col-md-3 control-label" >Enter file name :</label>
+                    <div class="col-md-6">
+                        <input id="filename-input-input" name="filename-input-input" type="text"
+                               placeholder="filename" class="form-control">
+                        <input id="filename-input-nodeName" type="hidden">
+                        <input id="filename-input-nodeAddress" type="hidden">
+                        <input id="filename-input-currentfolder" type="hidden">
+                    </div>
+                    <div class="col-md-3"></div>
+                    <br>
+                </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="file-manager-input-button-cancel">Cancel</button>
+                    <button type="button" class="btn btn-info" id="file-manager-input-button-validate">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="file-managers-file-manager-content" class="col-xs-12">
+
+    </div>
+
+
+    <div id="file-upload-progress-modal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div id="file-upload-progress-modal-dialog" class="modal-dialog modal-dialog-centered">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">File Upload Progress</h4>
+                </div>
+                <div id="file-upload-progress-body" class="modal-body">
+                    <div id="file-upload-progress" class="progress">
+                        <div id="file-upload-progress-bar" class="progress-bar bg-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width:2em;">
+                            0%
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        (100% completness is related to eskimo backend. More time is required to upload on node.)
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

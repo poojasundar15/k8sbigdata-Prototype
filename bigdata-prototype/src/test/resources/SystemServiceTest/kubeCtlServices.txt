@@ -1,0 +1,13 @@
+NAMESPACE              NAME                        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE   SELECTOR
+eskimo                 database-manager                     ClusterIP   10.254.72.27     <none>        31900/TCP                    52m   k8s-app=database-manager
+eskimo                 database               ClusterIP   None             <none>        9200/TCP,9300/TCP            56m   service=database
+eskimo                 broker                       ClusterIP   None             <none>        9092/TCP,9093/TCP,9999/TCP   47m   service=broker
+eskimo                 broker-manager               ClusterIP   10.254.214.99    <none>        31220/TCP                    44m   k8s-app=broker-manager
+eskimo                 kubernetes                  ClusterIP   10.254.0.1       <none>        443/TCP                      61m   <none>
+eskimo                 logstash                    ClusterIP   None             <none>        28999/TCP                    49m   service=logstash
+eskimo                 spark-runtime               ClusterIP   10.254.208.208   <none>        31810/TCP                    58m   k8s-app=spark-console
+eskimo                 spark-runtime-node          NodePort    10.254.151.156   <none>        31811:31811/TCP              58m   k8s-app=spark-console
+eskimo                 user-console                    ClusterIP   10.254.141.40    <none>        31008/TCP,31009/TCP          29m   k8s-app=user-console
+kube-system            kube-dns                    ClusterIP   10.254.0.2       <none>        53/UDP,53/TCP,9153/TCP       61m   k8s-app=kube-dns
+cluster-dashboard   dashboard-metrics-scraper   ClusterIP   10.254.212.70    <none>        8000/TCP                     60m   k8s-app=dashboard-metrics-scraper
+cluster-dashboard   cluster-dashboard        ClusterIP   10.254.180.169   <none>        443/TCP                      60m   k8s-app=cluster-dashboard

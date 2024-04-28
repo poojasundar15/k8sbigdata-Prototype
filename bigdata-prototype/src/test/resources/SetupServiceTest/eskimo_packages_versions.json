@@ -1,0 +1,54 @@
+{
+  "base-eskimo" : {
+    "software" : "0.2",
+    "distribution" : "1"
+  },
+  "database-manager": {
+    "software": "0.8.4",
+    "distribution": "1"
+  },
+  "database" : {
+    "software": "6.8.3",
+    "distribution": "1"
+  },
+  "distributed-filesystem": {
+    "software" : "debian_09_stretch",
+    "distribution": "1"
+  },
+  "broker-manager": {
+    "software": "2.0.0.2",
+    "distribution": "1"
+  },
+  "broker": {
+    "software" : "2.2.0",
+    "distribution": "1"
+  },
+  "cluster-master": {
+    "software": "1.8.1",
+    "distribution": "1"
+  },
+  "cluster-dashboard": {
+    "software": "2.5.1",
+    "distribution": "1"
+  },
+  "distributed-time": {
+    "software" : "debian_09_stretch",
+    "distribution": "1"
+  },
+  "calculator": {
+    "software" : "2.4.4",
+    "distribution": "1"
+  },
+  "user-console": {
+    "software": "0.9.0",
+    "distribution": "1"
+  },
+  "cluster-manager": {
+    "software": "debian_09_stretch",
+    "distribution": "1"
+  },
+  "kube": {
+    "software": "1.23.5",
+    "distribution": "1"
+  }
+}

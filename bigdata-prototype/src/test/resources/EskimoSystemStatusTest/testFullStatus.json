@@ -1,0 +1,43 @@
+{
+  "nodeServicesStatus": {
+    "service_kafka-manager_192-168-10-11": "OK",
+    "node_nbr_192-168-10-11": "1",
+    "service_kafka_192-168-10-11": "OK",
+    "service_cerebro_192-168-10-11": "OK",
+    "service_elasticsearch_192-168-10-11": "OK",
+    "service_flink-runtime_192-168-10-11": "OK",
+    "service_spark-console_192-168-10-11": "OK",
+    "service_flink-app-master_192-168-10-11": "OK",
+    "service_mesos-agent_192-168-10-11": "OK",
+    "service_ntp_192-168-10-11": "OK",
+    "service_grafana_192-168-10-11": "OK",
+    "service_kibana_192-168-10-11": "OK",
+    "node_address_192-168-10-11": "192.168.10.11",
+    "node_alive_192-168-10-11": "OK",
+    "service_mesos-master_192-168-10-11": "OK",
+    "service_zeppelin_192-168-10-11": "OK",
+    "service_spark-runtime_192-168-10-11": "OK",
+    "service_zookeeper_192-168-10-11": "OK",
+    "service_logstash_192-168-10-11": "OK",
+    "service_prometheus_192-168-10-11": "OK"
+  },
+  "processingPending": false,
+  "systemStatus": {
+    "monitoringDashboardId": "OMwJrHAWk",
+    "installedNodeServices": 11,
+    "buildVersion": "0.5-SNAPSHOT",
+    "availableNodeServices": 11,
+    "buildTimestamp": "2023-01-12T09:54:15Z",
+    "enableKubernetes": true,
+    "roles": "ADMIN",
+    "installedKubeServices": 12,
+    "monitoringDashboardRefreshPeriod": "30s",
+    "availableKubeServices": 12,
+    "sshUsername": "eskimo",
+    "nodesCount": 4,
+    "isSnapshot": true,
+    "startTimestamp": "2023-01-12 13:26:20",
+    "username": "admin"
+  },
+  "status": "OK"
+}

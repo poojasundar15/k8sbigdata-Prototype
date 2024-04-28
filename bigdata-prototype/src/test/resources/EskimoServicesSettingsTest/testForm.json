@@ -1,0 +1,19 @@
+{
+  "database-bootstrap---memory_lock":"",
+  "database-action---destructive_requires_name":"false",
+  "broker-num---network---threads":"5",
+  "broker-num---io---threads":"10",
+  "broker-socket---send---buffer---bytes":"",
+  "broker-socket---receive---buffer---bytes":"",
+  "broker-socket---request---max---bytes":"",
+  "broker-num---partitions":"",
+  "broker-log---retention---hours":"",
+  "calculator-runtime-calculator---driver---memory":"500m",
+  "calculator-runtime-calculator---rpc---numRetries":"10",
+  "calculator-runtime-calculator---rpc---retry---wait":"",
+  "calculator-runtime-calculator---scheduler---mode":"FIFO",
+  "calculator-runtime-calculator---locality---wait":"",
+  "calculator-runtime-calculator---dynamicAllocation---executorIdleTimeout":"200s",
+  "calculator-runtime-calculator---dynamicAllocation---cachedExecutorIdleTimeout":"400s",
+  "calculator-runtime-calculator---runtime---memory":"[ESKIMO_DEFAULT]"
+}

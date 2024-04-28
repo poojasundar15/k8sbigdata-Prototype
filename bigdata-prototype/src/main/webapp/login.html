@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link rel="apple-touch-icon" sizes="57x57" href="images/favicons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="images/favicons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/favicons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="images/favicons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/favicons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="images/favicons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="images/favicons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="images/favicons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="images/favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="images/favicons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="images/favicons/ms-icon-144x144.png">
+
+    <title> Platform Manager - Login</title>
+    <!-- Bootstrap -->
+    <link href="css/vendor/font-awesome-4.3.0.min.css" rel="stylesheet">
+
+    <link href="css/eskimo-theme.css" rel="stylesheet">
+    <link href="css/vendor/bootstrap-5.2.0.css" rel="stylesheet">
+    <link href="css/ajaxterm.css" rel="stylesheet">
+    <link href="css/eskimo-ui.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    [endif]-->
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="scripts/vendor/jquery-3.6.0.js"></script>
+    <script src="scripts/vendor/bootstrap-5.2.0.js"></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="scripts/eskimoUtils.js"></script>
+
+    <script>
+        var getContextPath = function() {
+            var base = document.getElementsByTagName('base')[0];
+            if (base && base.href && (base.href.length > 0)) {
+                base = base.href;
+            } else {
+                base = document.URL;
+            }
+            return base.substr(0,
+                base.indexOf("/", base.indexOf("/", base.indexOf("//") + 2) + 1));
+        }
+    </script>
+
+    <style>
+
+        #panel-login {
+            padding-bottom: 0px;
+        }
+
+        #panel-login-body {
+            padding: 20px;
+        }
+
+        #login-error-message {
+            padding: 0px;
+            margin: 0px;
+        }
+
+    </style>
+
+</head>
+
+<body theme-bg="bg1">
+<main class="login-form">
+    <div class="container">
+        <div class="row text-center vertical-center">
+            <div class="col-md-8 offset-md-2  col-sm-10 offset-sm-1 col-lg-6 offset-lg-3 justify-content-sm-center ">
+                <div id="panel-login" class="card ">
+                    <div class="eskimo-panel-heading card-header">Login</div>
+                    <div id="panel-login-body" class="card-body">
+                        <form id="loginForm" action="/login" method="POST">
+                            <div class="input-group mb-2 row">
+                                <label for="eskimo-username"
+                                       class="col-md-4 col-form-label text-md-right">Username</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="eskimo-username" class="form-control" name="eskimo-username"
+                                           required autofocus>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-2 row">
+                                <label for="eskimo-password" class="col-md-4 col-form-label text-md-right">Password</label>
+                                <div class="col-md-6">
+                                    <input type="password" id="eskimo-password" class="form-control" name="eskimo-password" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6 offset-3 justify-content-sm-center">
+                                    <button type="submit" class="btn btn-info">
+                                        Login
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row" id="login-error-panel" style="display: none;">
+                            <div class="alert alert-danger col-md-12" role="alert" id="login-error-message">
+                                Error logging in. Perhaps wrong credentials ?
+                            </div>
+                        </div>
+                    </div>
+                    <div id="login-demo-footer" class="eskimo-panel-footer card-footer" style="display: none;">
+                        (Use <strong>admin</strong> / <strong>password</strong> on Demo VM)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script>
+    document.getElementById("loginForm").action=getContextPath() + "/login";
+
+    if (window.location.href.indexOf("error") > -1) {
+        console.log("found error tag");
+
+        $("#login-error-panel").css("display", "block");
+        $("#panel-login-body").css("padding-bottom", "0px");
+
+        setTimeout(function() {
+            $("#login-error-panel").css("display", "none");
+            $("#panel-login-body").css("padding-bottom", "20px");
+        }, 5000);
+    }
+
+    if (window.location.href.indexOf("demo") > -1) {
+        $("#login-demo-footer").css("display", "block");
+    }
+
+</script>
+
+</body>
+</html>
